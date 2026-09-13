@@ -158,7 +158,7 @@ addEventListener('resize',resize);
 const INK='#12100d', PAPER='#f3ead8', GOLD='#c9962e', GOLDL='#e8bd55', RED='#9e2b1e', DARK='#241c10';
 const S={ mode:'start', dist:0, coins:0, speed:290, t:0, camX:0, complete:false, ceremT:0 };
 const cat={ x:0, y:0, vy:0, onGround:true, jumps:0, squash:0, dead:0 };
-let obstacles=[], coinList=[], parts=[], clouds=[], skyline=[], gates=[], midline=[], floaters=[], leaves=[], scatter=[], scatterX=0;
+let obstacles=[], coinList=[], parts=[], clouds=[], skyline=[], gates=[], midline=[], floaters=[], leaves=[], scatter=[], scatterX=0, prints=[];
 let nextObX=0, nextCoinX=0, rng=null;
 const groundY=()=>H-72;
 
@@ -229,7 +229,7 @@ function reset(){
   midline=[]; let mx=0; const mrng=mulberry32(31337);
   while(mx<W+600){ const bw=50+mrng()*110, bh=50+mrng()*110; midline.push({x:mx,w:bw,h:bh}); mx+=bw+14+mrng()*40; }
   gates=[]; for(let m=1;m<=40;m++) gates.push({x:m*2000+600, n:m*100, hit:false});
-  scatter=[]; scatterX=0;
+  scatter=[]; scatterX=0; prints=[];
   genAhead();
 }
 function jump(){ cat.buffer=.12; }
@@ -320,6 +320,10 @@ function update(dt){
   // particles
   for(let i=parts.length-1;i>=0;i--){ const p=parts[i]; p.ttl-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; if(!p.nog) p.vy+=500*dt; if(p.ttl<=0) parts.splice(i,1); }
   if(cat.onGround && Math.random()<dt*8) spawnDust(cat.x-14,groundY(),1,'#4a3f28');
+  if(season==='winter' && cat.onGround && S.mode==='run' && Math.random()<dt*11){
+    if(prints.length>70) prints.shift();
+    prints.push({x:S.camX+cat.x-6, side:prints.length%2, ttl:4.5}); }
+  for(let i=prints.length-1;i>=0;i--){ const pr=prints[i]; pr.ttl-=dt; if(pr.ttl<=0||pr.x<S.camX-30) prints.splice(i,1); }
   for(let i=floaters.length-1;i>=0;i--){ const f=floaters[i]; f.ttl-=dt; f.y-=34*dt; if(f.ttl<=0) floaters.splice(i,1); }
   if(season!=='summer'){ while(scatterX<S.camX+W+260){ scatter.push({x:scatterX,r:Math.random()}); scatterX+=80+Math.random()*110; }
     for(let i=scatter.length-1;i>=0;i--) if(scatter[i].x<S.camX-60) scatter.splice(i,1); }
@@ -434,6 +438,7 @@ function draw(){
     for(let x=0;x<=W;x+=60){ const sag=Math.sin((x+S.camX*.9)/180)*14; ctx.lineTo(x,groundY()-130-i*26+Math.abs(sag)); } ctx.stroke(); }
   // ground
   ctx.fillStyle='#241c12'; ctx.fillRect(0,groundY(),W,H-groundY());
+  if(season==='winter'){ ctx.fillStyle='rgba(236,232,222,.85)'; ctx.fillRect(0,groundY()+3,W,7); }
   ctx.fillStyle=GOLD; ctx.fillRect(0,groundY(),W,3);
   ctx.fillStyle='rgba(201,150,46,.18)';
   for(let x=-(S.camX%46);x<W;x+=46) ctx.fillRect(x,groundY()+14,22,2);
@@ -442,6 +447,9 @@ function draw(){
     if(season==='winter'){ ctx.fillStyle='rgba(243,234,216,.4)'; ctx.beginPath(); ctx.ellipse(sx2,sy,4+sc.r*5,1.6+sc.r*1.6,0,0,7); ctx.fill(); }
     else if(season==='spring'){ ctx.fillStyle='rgba(232,183,176,.6)'; ctx.beginPath(); ctx.ellipse(sx2,sy,3.4,1.8,.4,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(sx2+4,sy+1.4,2.6,1.5,-.5,0,7); ctx.fill(); }
     else if(season==='autumn'){ ctx.fillStyle='rgba(158,43,30,.5)'; ctx.beginPath(); ctx.ellipse(sx2,sy,4,2.2,sc.r*3,0,7); ctx.fill(); } }
+  if(season==='winter'){ for(const pr of prints){ const px=pr.x-S.camX; if(px<-10||px>W+10) continue;
+    ctx.fillStyle='rgba(60,52,40,'+(.55*Math.min(1,pr.ttl/2)).toFixed(3)+')';
+    ctx.beginPath(); ctx.ellipse(px,groundY()+5.4+pr.side*2.2,2.5,1.4,0,0,7); ctx.fill(); } }
   // coins (koban)
   for(const c of coinList){ const x=c.x-S.camX; if(x<-40||x>W+40) continue;
     const bob=Math.sin(S.t*4+c.x*.05)*4;
