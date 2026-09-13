@@ -303,12 +303,14 @@ function update(dt){
     if(g.n===4000){ S.complete=true; S.bonus+=50; S.ceremT=3.2;
       for(let i=0;i<42;i++){ const a2=Math.random()*6.28, sp=90+Math.random()*240; parts.push({x:cat.x+30,y:cat.y-90,vx:Math.cos(a2)*sp,vy:Math.sin(a2)*sp-70,s:2+Math.random()*3,ttl:.9+Math.random()*.9,col:i%3===0?PAPER:(i%3===1?GOLDL:RED)}); }
       tone(1180,1180,.9,'sine',.06); tone(1568,1568,.7,'sine',.045,.14); tone(2093,2093,.6,'sine',.035,.28); sweep(300,3200,.5,.05);
+      for(let e=0;e<3;e++){ const w2=.9+e*.55; tone(590,590,.9,'sine',.022,w2); tone(1628,1628,.55,'sine',.010,w2); } // far gates answer, soft and low
       floaters.push({x:cat.x+40,y:cat.y-120,txt:'+50 the last gate',ttl:1.6,col:GOLDL});
     } } }
   if(S.mileT>0) S.mileT-=dt;
-  if(S.ceremT>0) S.ceremT-=dt;
+  if(S.ceremT>0){ S.ceremT-=dt;
+    if(Math.random()<dt*22) parts.push({x:Math.random()*W,y:-8,vx:-16-Math.random()*18,vy:26+Math.random()*16,s:2+Math.random()*1.8,ttl:2.8,col:Math.random()<.7?GOLDL:PAPER,nog:1}); }
   // particles
-  for(let i=parts.length-1;i>=0;i--){ const p=parts[i]; p.ttl-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=500*dt; if(p.ttl<=0) parts.splice(i,1); }
+  for(let i=parts.length-1;i>=0;i--){ const p=parts[i]; p.ttl-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; if(!p.nog) p.vy+=500*dt; if(p.ttl<=0) parts.splice(i,1); }
   if(cat.onGround && Math.random()<dt*8) spawnDust(cat.x-14,groundY(),1,'#4a3f28');
   for(let i=floaters.length-1;i>=0;i--){ const f=floaters[i]; f.ttl-=dt; f.y-=34*dt; if(f.ttl<=0) floaters.splice(i,1); }
   if(season!=='summer'){ while(scatterX<S.camX+W+260){ scatter.push({x:scatterX,r:Math.random()}); scatterX+=80+Math.random()*110; }
