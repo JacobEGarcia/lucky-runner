@@ -343,22 +343,38 @@ function showOver(){
 }
 
 // ---------------- render ----------------
+const _MIX=(a,b,t)=>[a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t];
+const _CSS=c=>'rgb('+Math.round(c[0])+','+Math.round(c[1])+','+Math.round(c[2])+')';
+function dawnK(){ const d=Math.max(0,Math.min(1,S.dist/2600)); return d*d*(3-2*d); } // full dawn at 2600m
 function draw(){
-  ctx.fillStyle=INK; ctx.fillRect(0,0,W,H);
-  // moon
-  ctx.fillStyle=PAPER; ctx.globalAlpha=.92; ctx.beginPath(); ctx.arc(W*.78,H*.2,34,0,7); ctx.fill(); ctx.globalAlpha=1;
-  ctx.fillStyle=INK; ctx.beginPath(); ctx.arc(W*.78+12,H*.2-8,30,0,7); ctx.fill();
+  const dk=dawnK();
+  const gy0=groundY();
+  const sky=ctx.createLinearGradient(0,0,0,gy0);
+  sky.addColorStop(0,_CSS(_MIX([18,16,13],[40,36,56],dk)));
+  sky.addColorStop(.62,_CSS(_MIX([18,16,13],[76,52,40],dk)));
+  sky.addColorStop(1,_CSS(_MIX([24,20,14],[172,98,44],dk)));
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,gy0);
+  ctx.fillStyle=INK; ctx.fillRect(0,gy0,W,H-gy0);
+  // rising sun (earned past ~800m)
+  if(dk>.3){ const sa=(dk-.3)/.7, sx=W*.2, sy=gy0+30-(gy0+30-H*.26)*sa;
+    const sg=ctx.createRadialGradient(sx,sy,4,sx,sy,120);
+    sg.addColorStop(0,'rgba(233,180,80,'+(.5*sa).toFixed(3)+')'); sg.addColorStop(1,'rgba(233,180,80,0)');
+    ctx.fillStyle=sg; ctx.fillRect(sx-130,sy-130,260,260);
+    ctx.fillStyle='rgba(233,196,106,'+(.95*sa).toFixed(3)+')'; ctx.beginPath(); ctx.arc(sx,sy,30,0,7); ctx.fill(); }
+  // moon sets as dawn comes
+  ctx.fillStyle=PAPER; ctx.globalAlpha=.92*(1-dk*.65); ctx.beginPath(); ctx.arc(W*.78,H*.2+dk*36,34,0,7); ctx.fill(); ctx.globalAlpha=1;
+  ctx.fillStyle=_CSS(_MIX([18,16,13],[40,36,56],dk)); ctx.beginPath(); ctx.arc(W*.78+12,H*.2-8+dk*36,30,0,7); ctx.fill();
   // clouds
-  ctx.fillStyle='#1d1812';
+  ctx.fillStyle=_CSS(_MIX([29,24,18],[64,44,32],dk));
   for(const c of clouds){ const cx=(c.x-S.camX*.12*c.s)%(W+200); ctx.beginPath(); ctx.ellipse((cx+W+100)%(W+200)-100,c.y,60*c.s,14*c.s,0,0,7); ctx.fill(); }
   // skyline parallax
-  ctx.fillStyle='#1a140d';
+  ctx.fillStyle=_CSS(_MIX([26,20,13],[52,36,26],dk));
   for(const b of skyline){ const bx=(b.x-S.camX*.35)%(W+500); const rx=(bx+W+250)%(W+500)-250;
     ctx.fillRect(rx,groundY()-b.h,b.w,b.h);
     if(b.pg){ ctx.beginPath(); ctx.moveTo(rx-6,groundY()-b.h); ctx.lineTo(rx+b.w/2,groundY()-b.h-22); ctx.lineTo(rx+b.w+6,groundY()-b.h); ctx.fill(); }
   }
   // mid-ground rooftops
-  ctx.fillStyle='#1f1710';
+  ctx.fillStyle=_CSS(_MIX([31,23,16],[58,40,28],dk));
   for(const b of midline){ const bx=(b.x-S.camX*.6)%(W+700); const rx=(bx+W+350)%(W+700)-350;
     ctx.fillRect(rx,groundY()-b.h,b.w,b.h); }
   // previous-best flag
@@ -750,7 +766,7 @@ if(qs.get('qa')){
     for(let i=0;i<26;i++) update(1/60); }
   if(qs.get('tem')){ const r=18, off=parseFloat(qs.get('tem'))||460; obstacles.push({x:S.camX+cat.x+off, temari:true, r, w:r*2, h:r*2, roll:80, bps:1.05, ph:parseFloat(qs.get('tph'))||.4, cy:groundY()-r, rollA:0, near:false, passed:false});
     for(let i=0;i<26;i++) update(1/60); }
-  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,err:window.__err||''});
+  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,dawn:+dawnK().toFixed(2),err:window.__err||''});
   draw();
   }
 }
