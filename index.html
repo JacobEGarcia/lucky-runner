@@ -722,6 +722,10 @@ function drawCard(score,rank,dist,coins,best,streak,complete){
   g.fillStyle='#9e2b1e'; g.font='26px Georgia';
   g.fillText(rank,72,362);
   try{ g.letterSpacing='4px'; }catch(e){}
+  if(bibTier()>=1){ try{ g.letterSpacing='2px'; }catch(e){}
+    g.fillStyle='#8a6a2a'; g.font='italic 19px Georgia';
+    g.fillText(bibTier()===2?'the cat wears its ink bib':'the cat wears its gold bib',74,392);
+    try{ g.letterSpacing='4px'; }catch(e){} }
   g.fillStyle='#6a5626'; g.font='21px Georgia';
   const rows=[['DISTANCE',dist],['KOBAN',String(coins)],['BEST TODAY',String(best)],['DAY STREAK',String(streak)]];
   rows.forEach((r,i)=>{ const y=418+i*36;
