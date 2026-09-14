@@ -1629,7 +1629,8 @@ function draw(){
     const rmK=Math.max(0,Math.min(1,(dk-.03)*8)); // morning mist - it begins to gather over the water once the darkest hour has passed
     if(rmK>.02){ const rm2=mulberry32((seedNum^0x9d41)+17);
       for(let mi=0;mi<4;mi++){ const mph=rm2()*7, mdr=Math.sin(S.t*.24+mph)*10+Math.sin(S.t*.11+mph*2)*6; // a slow pooling drift, never hurried
-        const mx2=wx-70+mi*44+mdr, my2=gy-7+mi*1.4+Math.sin(S.t*.4+mph)*.8, mr2=34+mi*7;
+        const mxB=wx-70+mi*44, calmM=(mxB<420&&mxB>160)?Math.sin((420-mxB)/260*Math.PI):0; // the same calm - the mist lies flat as she passes
+        const mx2=mxB+mdr*(1-calmM), my2=gy-7+mi*1.4+Math.sin(S.t*.4+mph)*.8*(1-calmM), mr2=34+mi*7;
         const ma2=(.13-mi*.014)*rmK*(.75+.25*Math.sin(S.t*.5+mph*2));
         const g2=ctx.createRadialGradient(mx2,my2,3,mx2,my2,mr2);
         g2.addColorStop(0,'rgba(214,216,208,'+ma2.toFixed(3)+')'); g2.addColorStop(.6,'rgba(214,216,208,'+(ma2*.4).toFixed(3)+')'); g2.addColorStop(1,'rgba(214,216,208,0)');
