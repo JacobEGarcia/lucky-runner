@@ -1290,6 +1290,11 @@ function draw(){
     ctx.fillStyle='rgba(224,232,244,'+(.22+.3*lit).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(jx-1,gy-26,3.4,1.6,-.3,0,7); ctx.fill();
     ctx.fillStyle='rgba(158,43,30,.92)'; ctx.beginPath(); ctx.moveTo(jx-4.6,gy-18); ctx.lineTo(jx+4.6,gy-18); ctx.lineTo(jx,gy-10); ctx.closePath(); ctx.fill();
     ctx.fillStyle='#3e372e'; ctx.beginPath(); ctx.ellipse(jx+11,gy-2,2.6,1.8,0,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(jx+11,gy-5,1.8,1.4,0,0,7); ctx.fill();
+    { const ix2=jx+11, calmJ=(ix2<420&&ix2>160)?Math.sin((420-ix2)/260*Math.PI):0; // a stick of incense at the offering stone - the smallest column, sharing the same air
+      for(let wi=0;wi<3;wi++){ const wu=wi/2, wx4=ix2+((S.gust||0)*wu*6+Math.sin(S.t*2.6+j.x+wi)*.7*wu)*(1-calmJ), wy4=gy-7-wi*3;
+        ctx.fillStyle='rgba(206,204,196,'+((.14-wi*.03)*(1-dk*.3)).toFixed(3)+')';
+        ctx.beginPath(); ctx.arc(wx4,wy4,.7+wu*.5,0,7); ctx.fill(); }
+    } // it leans with the gusts, and stands straight for one beat as she passes
     if(season==='winter'){ ctx.fillStyle=snowTint(dk); ctx.beginPath(); ctx.ellipse(jx,gy-27,4.6,1.8,0,0,7); ctx.fill(); } }
   // icho - the ginkgo wall: one night the leaves let go together, and the gold pools at its base
   if(ginkOn){ const wx=ginkX-S.camX; if(wx>-170&&wx<W+70){ const gy=groundY(), lit=(1-Math.cos(2*Math.PI*MP))/2;
