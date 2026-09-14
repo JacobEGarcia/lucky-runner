@@ -1479,7 +1479,8 @@ function draw(){
       ctx.beginPath(); ctx.arc(wxp,wyp,1+wu*2.4,0,7); ctx.fill(); }
     // furin - a wind chime under the far eave, its paper strip lifting when the gusts rise
     const fx3=wx+42, fy3=gy-46; // hung from the roof's far corner
-    const fth=((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))+.1*Math.sin(S.t*2.2); // it swings with the gusts
+    const calm3=(fx3<420&&fx3>160)?Math.sin((420-fx3)/260*Math.PI):0; // the same calm that stills the kettle - the chime's small voice pausing as she passes
+    const fth=((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))*(1-calm3)+.1*Math.sin(S.t*2.2)*(1-calm3); // it swings with the gusts, and goes still in the calm
     ctx.save(); ctx.translate(fx3,fy3); ctx.rotate(fth*.5);
     ctx.strokeStyle=_CSS(_MIX([90,70,50],[120,95,68],dk)); ctx.lineWidth=.7; // its cord
     ctx.beginPath(); ctx.moveTo(0,-.5); ctx.lineTo(0,.6); ctx.stroke();
