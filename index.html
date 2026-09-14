@@ -1514,8 +1514,14 @@ function draw(){
     ctx.beginPath(); ctx.arc(bxp-6.4,byp-3.4,4,0,7); ctx.fill();
     ctx.fillStyle=_CSS(_MIX([196,120,58],[238,170,100],dk));
     ctx.beginPath(); ctx.ellipse(bxp-6.4,byp-3.4,1.6,2,0,0,7); ctx.fill();
-    ctx.strokeStyle='rgba(238,180,100,'+(.22*lg*(1-dk*.3)).toFixed(3)+')'; ctx.lineWidth=.8; // its trembling reflection
+    const calmK=Math.max(0,Math.min(1,1-(S.gust||0)*3)); // the surface going still
+    ctx.strokeStyle='rgba(238,180,100,'+(.22*lg*(1-dk*.3)*(1-calmK*.85)).toFixed(3)+')'; ctx.lineWidth=.8; // its trembling reflection, settling as the water calms
     ctx.beginPath(); ctx.moveTo(bxp-6.4+Math.sin(S.t*2.6)*.6,byp+1); ctx.lineTo(bxp-6.4+Math.sin(S.t*2.6+1)*.8,byp+4.6); ctx.stroke();
+    if(calmK>.3){ const sh=.96+.04*Math.sin(S.t*.9); // the still doubling - the lantern holds its own image on the water
+      ctx.fillStyle='rgba(255,190,110,'+(.1*lg*calmK*(1-dk*.2)).toFixed(3)+')';
+      ctx.beginPath(); ctx.ellipse(bxp-6.4,byp+3.6,3.2*sh,2.6,0,0,7); ctx.fill();
+      ctx.fillStyle=_CSS(_MIX([150,92,46],[206,142,84],dk));
+      ctx.globalAlpha=calmK*lg*.55; ctx.beginPath(); ctx.ellipse(bxp-6.4,byp+3.4,1.5,1.9*sh,0,0,7); ctx.fill(); ctx.globalAlpha=1; }
     { const br2=mulberry32((seedNum^0x6a75)+3); // bats stitch the sky above the water, quick silhouettes
       for(let bi=0;bi<3;bi++){ const ph=br2()*7, sp1=1.1+br2()*.5, sp2=2.3+br2()*.8;
         const bx2=wx+Math.sin(S.t*sp1+ph)*44+Math.sin(S.t*sp2+ph*2)*11; // quick erratic passes
