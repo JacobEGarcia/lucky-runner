@@ -519,7 +519,7 @@ function update(dt){
   if(kakaOn&&S.feaT<0&&S.feaN===0&&S.birdT>=0){ S.feaT=S.t+7.5; } // one feather stays behind when the crossing is done
   if(S.feaT>0&&S.t>=S.feaT&&S.feaN===0){ S.feaN=1; S.feaSX=(((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250); S.feaT=S.t; } // it lets go of the post
   if(S.feaN===1&&S.feaWX<0&&S.t>=S.feaT+4.5){ S.feaWX=S.camX+S.feaSX+163; } // and settles in the path, the wind carrying it down-street
-  if(S.feaWX>=0&&S.feaF<0&&cat.onGround&&S.feaWX-S.camX<cat.x&&S.feaWX-S.camX>cat.x-30){ S.feaF=S.t; } // and if her stride lands beside it, it stirs once - a leap over leaves it be
+  if(S.feaWX>=0&&S.feaF<0&&cat.onGround&&S.feaWX-S.camX<cat.x&&S.feaWX-S.camX>cat.x-30){ S.feaF=S.t; tone(190,150,.05,'triangle',.008); tone(260,240,.03,'triangle',.004,.04); } // and if her stride lands beside it, it stirs once - one softest rustle, barely a sound - a leap over leaves it be
   if(S.feaWX>=0){ const dF=S.feaWX-S.camX-cat.x; if(dF<(S.minF==null?999:S.minF)) S.minF=dF; if(Math.abs(dF)<40) S.dbgOG=cat.onGround?1:0; } // DEBUG
   { const spOn=spPin!==null?spPin:(kakaOn&&dawnK()>.75);
     const skx=((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250;
