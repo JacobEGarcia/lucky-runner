@@ -659,6 +659,12 @@ function draw(){
   sky.addColorStop(.62,_CSS(_MIX([18,16,13],[76,52,40],dk)));
   sky.addColorStop(1,_CSS(_MIX([24,20,14],[172,98,44],dk)));
   ctx.fillStyle=sky; ctx.fillRect(0,0,W,gy0);
+  { const hint=Math.max(0,Math.min(1,(dk-.1)/.18))*(1-Math.max(0,Math.min(1,(dk-.42)/.2))*.55); // the first hint of dawn - a pale warmth low behind the far ridge, gathering once morning is near, then yielding to the sun
+    if(hint>.02){ const hg=ctx.createLinearGradient(0,gy0-92,0,gy0);
+      hg.addColorStop(0,'rgba(238,170,110,0)');
+      hg.addColorStop(.72,'rgba(238,170,110,'+(.1*hint).toFixed(3)+')');
+      hg.addColorStop(1,'rgba(244,190,120,'+(.16*hint).toFixed(3)+')');
+      ctx.fillStyle=hg; ctx.fillRect(0,gy0-92,W,92); } }
   ctx.fillStyle=INK; ctx.fillRect(0,gy0,W,H-gy0);
   // rising sun (earned past ~800m)
   if(dk>.3){ const sa=(dk-.3)/.7, sx=W*.2, sy=gy0+30-(gy0+30-H*.26)*sa;
