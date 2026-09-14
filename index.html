@@ -465,7 +465,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -516,6 +516,7 @@ function update(dt){
   if(barkOn&&S.barkT<0&&S.dist>=barkX){ S.barkT=S.t; tone(240,190,.09,'triangle',.026,.01); tone(200,160,.08,'triangle',.02,.16); } // a dog barks off in the alleys - her ear flicks toward it
   if(bellOn&&S.bellT<0&&S.t>=S.bellAt){ S.bellT=S.t; tone(98,92,5,'sine',.026,1.2); tone(294,280,2.6,'sine',.007,1.23); tone(492,470,1.3,'sine',.004,1.27); } // the far temple bell on the hour - its strike arriving a breath late, the way distance carries sound
   if(bellOn&&S.bellT>=0&&S.ansT<0&&S.t>=S.bellT+1.9){ S.ansT=S.t; tone(2680,2540,1.4,'sine',.006); tone(3350,3300,.8,'sine',.003,.06); } // and a breath after the ring arrives, the answering chime gives its one soft note - its only voice on bell nights
+  if(bellOn&&kakaOn&&S.ansT>=0&&S.kakG<0&&S.t>=S.ansT+.7){ S.kakG=S.t; } // and on the rare nights both answer, the hill's lantern glows a breath after the street's note - the hill answering the street answering the temple
   if(qs.get('adb')){ const anA=S.ansT<0?-1:S.t-S.ansT, anW=(anA>=0&&anA<2.8)?Math.sin(anA*6.2)*Math.exp(-anA*1.8)*.5:0; document.title=('|A ansA'+anA.toFixed(2)+' answ'+anW.toFixed(3)+' bellT'+S.bellT.toFixed(1)); } // DEBUG
   if(glfOn&&S.glfT<0&&glfX-S.camX<W*1.5){ S.glfT=S.t; } // the lone leaf lets go just before its place enters view
   if(wedOn&&S.wedT<0&&S.dist>=wedD){ S.wedT=S.t; } // the fox wedding sets out
@@ -853,6 +854,18 @@ function draw(){
       ctx.restore();
       ctx.fillStyle=sil; ctx.beginPath(); ctx.arc(kx,gy-26,3.1,0,7); ctx.fill(); // head
       ctx.beginPath(); ctx.moveTo(kx-6.5,gy-28); ctx.lineTo(kx,gy-35); ctx.lineTo(kx+6.5,gy-28); ctx.closePath(); ctx.fill(); // kasa
+      if(kakaOn){ const lAx=kx+11*Math.cos(sw), lAy=gy-18+11*Math.sin(sw), lnx=lAx, lny=lAy+5.5; // a paper lantern hangs from the right arm - the pinwheel keeps the left
+        const gAg=S.kakG<0?-1:S.t-S.kakG, gw=(gAg>=0&&gAg<2.8)?Math.sin(Math.min(1,gAg/2.8)*Math.PI):0; // its answer - one warm breath, rising and gone
+        ctx.strokeStyle=sil; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(lAx,lAy); ctx.lineTo(lnx,lny-2.4); ctx.stroke(); // the string
+        ctx.fillStyle=gw>0?_CSS(_MIX([40,30,20],[255,176,84],gw)):_CSS(_MIX([28,22,14],[52,38,26],dk));
+        ctx.beginPath(); ctx.ellipse(lnx,lny,2.1,2.6,0,0,7); ctx.fill(); // the lantern
+        if(gw>0){ ctx.fillStyle='rgba(255,190,110,'+(gw*.22).toFixed(3)+')'; ctx.beginPath(); ctx.arc(lnx,lny,5.5+gw*2,0,7); ctx.fill(); // the glow against the night
+          ctx.strokeStyle='rgba(255,214,150,'+(gw*.5).toFixed(3)+')'; ctx.lineWidth=.8;
+          ctx.beginPath(); ctx.moveTo(lnx-1.1,lny-1.6); ctx.lineTo(lnx-1.1,lny+1.6); ctx.moveTo(lnx+1.1,lny-1.6); ctx.lineTo(lnx+1.1,lny+1.6); ctx.stroke(); } // the paper's ribs catching light
+        if(qs.get('kdbg')){ const kxg=(((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250); document.title=('|G gAg'+gAg.toFixed(2)+' gw'+gw.toFixed(3)+' kx'+kxg.toFixed(0)+' kakG'+S.kakG.toFixed(1)); } // DEBUG
+        if(qs.get('kmark')){ ctx.fillStyle='rgba(255,0,255,.9)'; ctx.fillRect(lnx-4,lny-4,8,8); ctx.fillRect(kx-2,gy-40,4,40); } // DEBUG MARKER
+      }
       const rimA=(.3+.25*harvK)*(1-dk*.6); // moon on its right side - hat, sleeve, post
       ctx.strokeStyle='rgba(224,232,244,'+rimA.toFixed(3)+')'; ctx.lineWidth=1;
       ctx.beginPath(); ctx.moveTo(kx,gy-35); ctx.lineTo(kx+6.5,gy-28); ctx.stroke(); // hat's edge
