@@ -2196,12 +2196,17 @@ function drawCatPose(g){
   g.fillStyle=CREAM; g.beginPath(); g.arc(13,-47,17,0,7); g.fill();
   // ears
   const bkt=S.barkT===undefined?-1:S.barkT, bk=bkt>=0?Math.sin(Math.PI*Math.min(1,(S.t-bkt)/.45)):0; // the bark flick - one ear swivels back
+  const ek=(S.lsnK||0)*1.4; // the listening tip - while her stride is eased, the back ear leans toward the hill's light
+  g.save(); g.translate(4,-60); g.rotate(ek); g.translate(-4,60);
   g.beginPath(); g.moveTo(0,-57); g.quadraticCurveTo(-4,-66,-2,-72); g.quadraticCurveTo(4,-66,9,-61); g.closePath(); g.fill();
+  g.restore();
   g.save(); g.translate(23,-58); g.rotate(-bk*.55); g.translate(-23,58);
   g.beginPath(); g.moveTo(19,-61); g.quadraticCurveTo(25,-67,30,-71); g.quadraticCurveTo(31,-62,27,-56); g.closePath(); g.fill();
   g.restore();
   g.fillStyle=REDC;
+  g.save(); g.translate(4,-60); g.rotate(ek); g.translate(-4,60);
   g.beginPath(); g.moveTo(1,-59); g.quadraticCurveTo(-1.5,-64,-1,-68); g.quadraticCurveTo(3,-64,6.5,-61); g.closePath(); g.fill();
+  g.restore();
   g.save(); g.translate(23,-58); g.rotate(-bk*.55); g.translate(-23,58);
   g.beginPath(); g.moveTo(21,-60); g.quadraticCurveTo(25,-64,28,-66.5); g.quadraticCurveTo(28.5,-61,26,-58); g.closePath(); g.fill();
   g.restore();
