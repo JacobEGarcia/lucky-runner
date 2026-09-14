@@ -519,7 +519,8 @@ function update(dt){
   if(padOn&&S.padT<0&&Math.abs(padX-S.camX-W*.26)<90){ S.padT=S.t; } // her passing troubles the water
   if(ketOn&&S.ketT<0&&Math.abs(ketX-S.camX-W*.26)<80){ S.ketT=S.t; } // her slipstream bends the wisp
   if(amaOn&&S.amaT<0&&amaX-S.camX<W*.72){ S.amaT=S.t; } // the loose amado starts its slow creak as the shop enters view
-  if(kazaOn) S.kazaA+=dt*(1.5+(S.gust||0)*20); // the pinwheel turns with the air
+  if(kazaOn){ S.kazaA+=dt*(1.5+(S.gust||0)*20); // the pinwheel turns with the air
+    const ka2=S.kakT<0?-1:S.t-S.kakT; if(ka2>=0&&ka2<2.2){ const sp2=1-ka2/2.2; S.kazaA+=dt*17*sp2*sp2; } } // and one hard spin as that first morning gust passes - two quick turns, easing out
   if(cat.onGround){ S.stepPh=(S.stepPh||0)+dt*S.speed*.011; const sn=Math.floor(S.stepPh); if(sn!==S.stepN){ S.stepN=sn; tone(sn%2?210:170,140,.035,'triangle',.012); } }
   // the moon pause - passing a tsukimi offering in the season, she stops to watch; one per run, clear stretches only
   { const gazePin=qs.get('gaze')!=null?+qs.get('gaze'):-1;
@@ -2301,7 +2302,7 @@ if(qs.get('qa')){
   startRun();
   if(qs.get('charm')){ S.charm=true; S.charmGot=true; }
   if(qs.get('combo')){ coinCombo=+qs.get('combo'); coinComboT=99; }
-  if(qs.get('gust')){ S.gust=+qs.get('gust'); S.gustGoal=S.gust; S.gustT=99; }
+  if(qs.get('gust')){ S.gust=+qs.get('gust'); S.gustGoal=S.gust; S.gustT=9999; } // QA: hold the pin through the morning
   if(qs.get('dist')){ S.dist=+qs.get('dist'); } // QA: run as if this far in (dawn, dist-gated events)
   if(qs.get('qa')==='nod') gameOver=()=>{};
   const n=+(qs.get('frames')||240), jumpAt=(qs.get('jump')||'').split(',').filter(Boolean).map(Number);
