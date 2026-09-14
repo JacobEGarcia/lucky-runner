@@ -306,6 +306,10 @@ const sobX=5000+mulberry32(seedNum^0x61b3)()*800; // where the cart parks along 
 const kasPin=qs.get('kas')!=null?+qs.get('kas')>0:null; // QA: force on/off
 const kasOn=kasPin!==null?kasPin:season==='autumn';
 const kasX=6800+mulberry32(seedNum^0x74ab)()*700; // where it stands along the course
+// ameshigure - the first cold drizzle, slanting through the lamplight on the chilliest nights
+const amePin=qs.get('ame')!=null?+qs.get('ame')>0:null; // QA: force on/off
+const ameR=mulberry32(seedNum^0x7e55); // which nights turn cold and wet
+const ameOn=amePin!==null?amePin:(season==='autumn'&&today.getDate()>=15&&ameR()<.45);
 // kaki - a persimmon tree heavy with fruit, a couple fallen to the roadside
 const kakiPin=qs.get('kaki')!=null?+qs.get('kaki')>0:null; // QA: force on/off
 const kakiOn=kakiPin!==null?kakiPin:season==='autumn';
@@ -873,6 +877,9 @@ function draw(){
         for(const ry of [-4.5,-1.5,1.5,4.5]){ ctx.beginPath(); ctx.moveTo(-5.6+Math.abs(ry)*.42,ry); ctx.lineTo(5.6-Math.abs(ry)*.42,ry); ctx.stroke(); }
         ctx.fillStyle='#241c12'; ctx.fillRect(-3,-10,6,2.4); ctx.fillRect(-3,7.6,6,2.4);
         ctx.fillStyle='rgba(18,16,13,'+(.7*ca).toFixed(3)+')'; ctx.font='6px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('祭',0,.5);
+        if(ameOn){ ctx.strokeStyle='rgba(210,218,226,.22)'; ctx.lineWidth=.7; // drizzle threads the lamplight
+          for(let di=0;di<3;di++){ const ddx=-7+di*6, ddy=-9+di*7;
+            ctx.beginPath(); ctx.moveTo(ddx,ddy); ctx.lineTo(ddx+1.8,ddy+6); ctx.stroke(); } }
         ctx.restore(); } }
     if(hoshiPair(b)){ const hr=mulberry32((seedNum^0x7e31)+Math.round(b.x));
       const fx=rx+b.w*(.3+hr()*.4), yA=groundY()-b.h+3, n=4+Math.floor(hr()*3);
@@ -1120,6 +1127,12 @@ function draw(){
           const g=ctx.createRadialGradient(mx,by,4,mx,by,86+b*20);
           g.addColorStop(0,'rgba(216,214,204,'+ba.toFixed(3)+')'); g.addColorStop(.62,'rgba(216,214,204,'+(ba*.45).toFixed(3)+')'); g.addColorStop(1,'rgba(216,214,204,0)');
           ctx.fillStyle=g; ctx.save(); ctx.translate(mx,by); ctx.scale(1,.16+b*.03); ctx.beginPath(); ctx.arc(0,0,86+b*20,0,7); ctx.fill(); ctx.restore(); } } } }
+    // ameshigure - the first cold drizzle, thin streaks slanting with the wind
+  if(ameOn){ const tilt=2.5+(S.gust||0)*6;
+    for(let i=0;i<26;i++){ const sp2=90+(i%3)*32, dx0=((i*97.31)%(W+80))-40;
+      const dy=(S.t*sp2+i*71)%(H+44)-22;
+      ctx.strokeStyle='rgba(196,206,214,'+(.09+.03*Math.sin(i*2.3)).toFixed(3)+')'; ctx.lineWidth=.8;
+      ctx.beginPath(); ctx.moveTo(dx0,dy); ctx.lineTo(dx0+tilt,dy+11); ctx.stroke(); } }
   ctx.fillStyle='rgba(201,150,46,.18)';
   for(let x=-(S.camX%46);x<W;x+=46) ctx.fillRect(x,groundY()+14,22,2);
   // seasonal ground scatter
@@ -2015,7 +2028,7 @@ if(qs.get('qa')){
   if(qs.get('gate40')){ gates.push({x:S.camX+cat.x+(+(qs.get('gd')||180)), n:4000, hit:false}); for(let i=0;i<60;i++) update(1/60); }
   if(qs.get('tem')){ const r=18, off=parseFloat(qs.get('tem'))||460; obstacles.push({x:S.camX+cat.x+off, temari:true, r, w:r*2, h:r*2, roll:80, bps:1.05, ph:parseFloat(qs.get('tph'))||.4, cy:groundY()-r, rollA:0, near:false, passed:false});
     for(let i=0;i<26;i++) update(1/60); }
-  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,star:starPin>=0?starPin:(S.starT>=0?+(S.t-S.starT).toFixed(2):-1),breath:(season==='winter'&&S.mode!=='start')?+(breathPin>=0?breathPin:(S.t%3.4)).toFixed(2):-1,bird:birdPin>=0?birdPin:(S.birdT>=0?+(S.t-S.birdT).toFixed(2):-1),dawn:+dawnK().toFixed(2),complete:S.complete?1:0,moon:+MP.toFixed(3),full:+fullK.toFixed(2),gust:+(S.gust||0).toFixed(2),constel:conOn?1:0,train:trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?+(S.t-S.trainT).toFixed(2):-1),matsuri:matsuriOn?1:0,cho:midline.filter(choPair).length,mist:mistOn?1:0,hanabi:(S.hanabi||[]).length,shide:shideOn?1:0,kitsune:kitsuOn?1:0,geese:geesePin>=0?geesePin:(S.geeseT>=0?+(S.t-S.geeseT).toFixed(2):-1),kami:kamiPin>=0?kamiPin:(S.kamiT>=0?+(S.t-S.kamiT).toFixed(2):-1),fire:fireflies.length,prints:prints.length,jizo:jizoList.length,owl:owlList.filter(o=>o.fly<0).length,wed:wedOn?(wedPin>=0?wedPin:(S.wedT>=0?+(S.t-S.wedT).toFixed(2):-1)):0,haza:hazaOn?1:0,kaka:kakaOn?1:0,ksnow:ksnowOn?1:0,toshi:toshiOn?1:0,stair:stairOn?1:0,tsukimi:tsukimiOn?midline.filter(tsukimiPair).length:0,imo:imoOn?midline.filter(imoPair).length:0,cos:cosOn?1:0,kaki:kakiOn?1:0,aka:(akaOn?(S.akaT<0?0:+(S.t-S.akaT).toFixed(2)):-1),pad:(padOn?(S.padT<0?0:+(S.t-S.padT).toFixed(2)):-1),gra:graOn?1:0,ket:(ketOn?(S.ketT<0?0:+(S.t-S.ketT).toFixed(2)):-1),kin:kinOn?1:0,hig:higOn?1:0,sob:sobOn?1:0,kas:kasOn?1:0,cica:S.cicadaN||0,crick:S.cricketN||0,suzu:(window.__suzuT!=null?1:0),gaze:+((S.gazeK)||0).toFixed(2),gazeDone:(S.gazeDone?1:0),sp:(spPin!==null?spPin:(kakaOn&&dawnK()>.75))?(spFlyPin>=0?0:(S.spT<0?3:0)):0,frost:frostOn?1:0,kaza:kazaOn?+(S.kazaA||0).toFixed(1):-1,hoshi:midline.filter(hoshiPair).length,steam:midline.filter(steamPair).length,lone:loneOn?1:0,gink:ginkOn?1:0,asa:asaOn?1:0,noren:midline.filter(norenPair).length,drip:dripOn?1:0,bath:bathOn?(S.bathT<0?(season==='winter'&&dawnK()>.45?1:3):0):0,hazax:(hazaOn&&window.__hazaX!=null)?Math.round(window.__hazaX):-1,kane:kaneOn?(S.kaneN||0):-1,hinode:hinodeOn?1:0,darTum:(S.darTum||0),darDev:(()=>{const d=obstacles.find(o=>o.daruma&&o.tumble!==undefined); return d?+d.dev.toFixed(2):-1;})(),err:window.__err||''});
+  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,star:starPin>=0?starPin:(S.starT>=0?+(S.t-S.starT).toFixed(2):-1),breath:(season==='winter'&&S.mode!=='start')?+(breathPin>=0?breathPin:(S.t%3.4)).toFixed(2):-1,bird:birdPin>=0?birdPin:(S.birdT>=0?+(S.t-S.birdT).toFixed(2):-1),dawn:+dawnK().toFixed(2),complete:S.complete?1:0,moon:+MP.toFixed(3),full:+fullK.toFixed(2),gust:+(S.gust||0).toFixed(2),constel:conOn?1:0,train:trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?+(S.t-S.trainT).toFixed(2):-1),matsuri:matsuriOn?1:0,cho:midline.filter(choPair).length,mist:mistOn?1:0,hanabi:(S.hanabi||[]).length,shide:shideOn?1:0,kitsune:kitsuOn?1:0,geese:geesePin>=0?geesePin:(S.geeseT>=0?+(S.t-S.geeseT).toFixed(2):-1),kami:kamiPin>=0?kamiPin:(S.kamiT>=0?+(S.t-S.kamiT).toFixed(2):-1),fire:fireflies.length,prints:prints.length,jizo:jizoList.length,owl:owlList.filter(o=>o.fly<0).length,wed:wedOn?(wedPin>=0?wedPin:(S.wedT>=0?+(S.t-S.wedT).toFixed(2):-1)):0,haza:hazaOn?1:0,kaka:kakaOn?1:0,ksnow:ksnowOn?1:0,toshi:toshiOn?1:0,stair:stairOn?1:0,tsukimi:tsukimiOn?midline.filter(tsukimiPair).length:0,imo:imoOn?midline.filter(imoPair).length:0,cos:cosOn?1:0,kaki:kakiOn?1:0,aka:(akaOn?(S.akaT<0?0:+(S.t-S.akaT).toFixed(2)):-1),pad:(padOn?(S.padT<0?0:+(S.t-S.padT).toFixed(2)):-1),gra:graOn?1:0,ket:(ketOn?(S.ketT<0?0:+(S.t-S.ketT).toFixed(2)):-1),kin:kinOn?1:0,hig:higOn?1:0,sob:sobOn?1:0,kas:kasOn?1:0,ame:ameOn?1:0,cica:S.cicadaN||0,crick:S.cricketN||0,suzu:(window.__suzuT!=null?1:0),gaze:+((S.gazeK)||0).toFixed(2),gazeDone:(S.gazeDone?1:0),sp:(spPin!==null?spPin:(kakaOn&&dawnK()>.75))?(spFlyPin>=0?0:(S.spT<0?3:0)):0,frost:frostOn?1:0,kaza:kazaOn?+(S.kazaA||0).toFixed(1):-1,hoshi:midline.filter(hoshiPair).length,steam:midline.filter(steamPair).length,lone:loneOn?1:0,gink:ginkOn?1:0,asa:asaOn?1:0,noren:midline.filter(norenPair).length,drip:dripOn?1:0,bath:bathOn?(S.bathT<0?(season==='winter'&&dawnK()>.45?1:3):0):0,hazax:(hazaOn&&window.__hazaX!=null)?Math.round(window.__hazaX):-1,kane:kaneOn?(S.kaneN||0):-1,hinode:hinodeOn?1:0,darTum:(S.darTum||0),darDev:(()=>{const d=obstacles.find(o=>o.daruma&&o.tumble!==undefined); return d?+d.dev.toFixed(2):-1;})(),err:window.__err||''});
   draw();
   }
 }
