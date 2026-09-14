@@ -1555,14 +1555,17 @@ function draw(){
         ctx.fillStyle=g2; ctx.beginPath(); ctx.ellipse(mx2,my2,mr2,mr2*.14,0,0,7); ctx.fill(); } }
     { const br2=mulberry32((seedNum^0x6a75)+3); // bats stitch the sky above the water, quick silhouettes
       for(let bi=0;bi<3;bi++){ const ph=br2()*7, sp1=1.1+br2()*.5, sp2=2.3+br2()*.8;
-        const bx2=wx+Math.sin(S.t*sp1+ph)*44+Math.sin(S.t*sp2+ph*2)*11; // quick erratic passes
-        const by2=gy-118-bi*16+Math.sin(S.t*sp2*.8+ph*3)*10;
+        let bx2=wx+Math.sin(S.t*sp1+ph)*44+Math.sin(S.t*sp2+ph*2)*11; // quick erratic passes
+        let by2=gy-118-bi*16+Math.sin(S.t*sp2*.8+ph*3)*10;
+        let ba2=1;
+        if(bi===2&&dk>.04){ const pk=Math.max(0,Math.min(1,(W+200-wx)/700)); // the last bat peels away toward the ridge as the dawn hint gathers
+          bx2+=pk*pk*120; by2-=pk*pk*150; ba2=1-pk*.65; }
         const wk=Math.sin(S.t*13+ph*4); // the wingbeat
-        for(const pass of [['rgba(243,234,216,'+(.3*(1-dk*.1)).toFixed(3)+')',4.2],['rgba(16,12,9,'+(.95*(1-dk*.1)).toFixed(3)+')',2]]){ // halo pass, then the dark core
+        for(const pass of [['rgba(243,234,216,'+(.3*(1-dk*.1)*ba2).toFixed(3)+')',4.2],['rgba(16,12,9,'+(.95*(1-dk*.1)*ba2).toFixed(3)+')',2]]){ // halo pass, then the dark core
           ctx.strokeStyle=pass[0]; ctx.lineWidth=pass[1]; ctx.lineCap='round';
           ctx.beginPath(); ctx.moveTo(bx2,by2); ctx.quadraticCurveTo(bx2-4.5,by2-2-wk*2.8,bx2-7,by2-.7+wk*1.5);
           ctx.moveTo(bx2,by2); ctx.quadraticCurveTo(bx2+4.5,by2-2-wk*2.8,bx2+7,by2-.7+wk*1.5); ctx.stroke(); }
-        ctx.fillStyle='rgba(16,12,9,'+(.95*(1-dk*.1)).toFixed(3)+')';
+        ctx.fillStyle='rgba(16,12,9,'+(.95*(1-dk*.1)*ba2).toFixed(3)+')';
         ctx.beginPath(); ctx.ellipse(bx2,by2,2.2,1.5,0,0,7); ctx.fill(); } }
   } }
   // icho no sakibare - the first ginkgo leaf, falling alone well before the season turns
