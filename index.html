@@ -523,7 +523,9 @@ function update(dt){
   if(ketOn&&S.ketT<0&&Math.abs(ketX-S.camX-W*.26)<80){ S.ketT=S.t; } // her slipstream bends the wisp
   if(amaOn&&S.amaT<0&&amaX-S.camX<W*.72){ S.amaT=S.t; } // the loose amado starts its slow creak as the shop enters view
   if(kazaOn){ S.kazaA+=dt*(1.5+(S.gust||0)*20); // the pinwheel turns with the air
-    const ka2=S.kakT<0?-1:S.t-S.kakT; if(ka2>=0&&ka2<2.2){ const sp2=1-ka2/2.2; S.kazaA+=dt*17*sp2*sp2; } } // and one hard spin as that first morning gust passes - two quick turns, easing out
+    const ka2=S.kakT<0?-1:S.t-S.kakT; if(ka2>=0&&ka2<2.2){ const sp2=1-ka2/2.2; S.kazaA+=dt*17*sp2*sp2; } // and one hard spin as that first morning gust passes - two quick turns, easing out
+    const ia2=S.ichoT<0?-1:S.t-S.ichoT; // and one answering flutter if the icho leaf passes with the pinwheel still in view behind her
+    if(ia2>=0&&ia2<1.2){ const kx2=(((kakaX-S.camX*.35)%1360+1110)%1360+1360)%1360-250; if(kx2>-20&&kx2<W+20) S.kazaA+=dt*9*Math.sin(ia2/1.2*Math.PI); } }
   if(cat.onGround){ S.stepPh=(S.stepPh||0)+dt*S.speed*.011; const sn=Math.floor(S.stepPh); if(sn!==S.stepN){ S.stepN=sn; tone(sn%2?210:170,140,.035,'triangle',.012); } }
   // the moon pause - passing a tsukimi offering in the season, she stops to watch; one per run, clear stretches only
   { const gazePin=qs.get('gaze')!=null?+qs.get('gaze'):-1;
