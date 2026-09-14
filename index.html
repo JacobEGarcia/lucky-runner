@@ -796,6 +796,10 @@ function draw(){
     ctx.beginPath(); ctx.moveTo(mx2-250,gyM);
     ctx.lineTo(mx2+60,gyM-118); ctx.lineTo(mx2+210,gyM-80); ctx.lineTo(mx2+550,gyM);
     ctx.closePath(); ctx.fill();
+    { const pkK=Math.max(0,Math.min(1,(dk-.84)/.06))*(1-Math.max(0,Math.min(1,(dk-.985)/.015))); // alpenglow - the peak catches the first pink a breath before the rooftops, then yields to the general morning
+      if(pkK>.02){ ctx.strokeStyle='rgba(244,180,130,'+(.5*pkK).toFixed(3)+')'; ctx.lineWidth=1.4; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(mx2+30,gyM-106.6); ctx.lineTo(mx2+60,gyM-118); ctx.lineTo(mx2+120,gyM-102.8); ctx.stroke(); // the rim over the peak
+        ctx.fillStyle='rgba(244,190,140,'+(.07*pkK).toFixed(3)+')'; ctx.beginPath(); ctx.arc(mx2+60,gyM-118,7,0,7); ctx.fill(); } }
     { const fwx=mx2+20, fwy=gyM-103; // the farmhouse high on the shoulder's slope, clear of the roofline
       ctx.fillStyle=_CSS(_MIX([16,13,9],[40,28,20],dk));
       ctx.fillRect(fwx-3.5,fwy-3.5,7,3.5);
