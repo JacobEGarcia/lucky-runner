@@ -953,6 +953,11 @@ function draw(){
       for(const [dx2,dy2] of [[3.4,0],[7,0],[10.6,0],[5.2,-2.6],[8.8,-2.6],[7,-5.2]]){ ctx.beginPath(); ctx.arc(ex+dx2-1,ey-9.5+dy2,1.55,0,7); ctx.fill(); }
       ctx.strokeStyle='rgba(224,232,244,'+(.25*(1-dk*.5)).toFixed(3)+')'; ctx.lineWidth=.8; // moonlight on the top dango
       ctx.beginPath(); ctx.arc(ex+6,ey-14.7,1.55,-2.4,-.7); ctx.stroke();
+      if(tr()<.55){ const fdx=ex+17+tr()*7; // one rolled off the engawa to the roadside - the mice's share
+        ctx.fillStyle='rgba(10,8,5,'+(.4*(1-dk*.2)).toFixed(3)+')';
+        ctx.beginPath(); ctx.ellipse(fdx,ey-1.4,1.8,.6,0,0,7); ctx.fill(); // its small shadow
+        ctx.fillStyle='rgba(236,226,204,'+(.8*(1-dk*.2)).toFixed(3)+')';
+        ctx.beginPath(); ctx.arc(fdx,ey-2.6,1.5,0,7); ctx.fill(); } // the fallen dango
       { const suzuT=window.__suzuT||-9;
         if(Math.abs(ex-cat.x)<120) window.__suzuT=S.t; // she passes close - or stops to watch the moon beside it - and the little singer holds its breath
         const sing=(S.t-suzuT)>1.6, sx3=ex+13.5, sy3=ey-6.4+(sing?0:.5);
