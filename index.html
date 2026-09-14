@@ -1553,7 +1553,7 @@ function draw(){
     ctx.strokeStyle=_CSS(_MIX([44,40,24],[60,54,32],dk)); ctx.lineWidth=.8;
     for(let si=0;si<16;si++){ const sx2=wx-10+sr2()*84;
       ctx.beginPath(); ctx.moveTo(sx2,gy-1); ctx.lineTo(sx2,gy-3-sr2()*2); ctx.stroke(); }
-    const g=(S.gust||0), px=wx+30, lean=Math.sin(S.t*.7)*g*1.2;
+    const g=(S.gust||0), px=wx+30, fage=S.t-(S.frontT<0?-99:S.frontT), frd3=px-(-160+fage*340), srge=(fage>=0&&fage<4.5&&Math.abs(frd3)<170)?(1-Math.abs(frd3)/170)*S.frontG:0, lean=Math.sin(S.t*.7)*g*1.2+srge*.9; // the front crossing the field - broader out here than in the street
     const wood=_CSS(_MIX([48,36,22],[66,50,32],dk));
     ctx.strokeStyle=wood; ctx.lineWidth=1.8; // the pole
     ctx.beginPath(); ctx.moveTo(px,gy-1); ctx.lineTo(px+lean,gy-34); ctx.stroke();
@@ -1567,7 +1567,7 @@ function draw(){
     ctx.fillStyle=cloth;
     ctx.beginPath(); ctx.moveTo(px-5+lean*.8,gy-27); ctx.lineTo(px+5+lean*.8,gy-27); ctx.lineTo(px+4+lean*.4,gy-14); ctx.lineTo(px-4+lean*.4,gy-14); ctx.closePath(); ctx.fill();
     for(const sd of [-1,1]){ const shx=px+sd*11+lean*.8, shy=gy-27; // each sleeve hangs from the crossbar
-      const lift=g*9, setl=Math.max(0,1-g*3), flut=Math.sin(S.t*7+sd*2)*g*1.6;
+      const lift=g*9+srge*7, setl=Math.max(0,1-g*3), flut=Math.sin(S.t*7+sd*2)*g*1.6+srge*Math.sin(S.t*9+sd*2.6)*2;
       const ex3=shx+sd*(3+g*4-setl*1.4), ey3=shy+9-lift+flut+setl*2.6; // they lift with the gusts, and settle lower when the wind dies
       ctx.strokeStyle=cloth; ctx.lineWidth=2.4;
       ctx.beginPath(); ctx.moveTo(shx,shy); ctx.quadraticCurveTo(shx+sd*2,shy+5-lift*.5,ex3,ey3); ctx.stroke(); }
