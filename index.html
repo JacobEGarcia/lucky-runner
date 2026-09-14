@@ -465,7 +465,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -537,6 +537,7 @@ function update(dt){
     const ia2=S.ichoT<0?-1:S.t-S.ichoT; // and one answering flutter if the icho leaf passes with the pinwheel still in view behind her
     if(ia2>=0&&ia2<1.2){ const kx2=(((kakaX-S.camX*.35)%1360+1110)%1360+1360)%1360-250; if(kx2>-20&&kx2<W+20) S.kazaA+=dt*9*Math.sin(ia2/1.2*Math.PI); } }
   if((S.gustGoal||0)>=.55&&(S.gust||0)<.35&&S.t-(S.frontT<0?-9:S.frontT)>4){ S.frontT=S.t; S.frontG=S.gustGoal; } // a real gust is born up the road - the front enters from behind her and rolls down the street
+  { const fa3=S.t-(S.frontT<0?-99:S.frontT); S.lullK=(fa3>4.3&&fa3<5.5)?Math.sin((fa3-4.3)/1.2*Math.PI):0; } // after the front passes, one breath where every voice falls quiet together
   { const fa=qs.get('frontage'); if(fa){ S.frontT=S.t-(+fa); S.frontG=.85; } } // QA: hold a front at age N seconds
   if(cat.onGround){ S.stepPh=(S.stepPh||0)+dt*S.speed*.011; const sn=Math.floor(S.stepPh); if(sn!==S.stepN){ S.stepN=sn; tone(sn%2?210:170,140,.035,'triangle',.012); } }
   // the moon pause - passing a tsukimi offering in the season, she stops to watch; one per run, clear stretches only
@@ -646,7 +647,7 @@ function update(dt){
   for(let i=floaters.length-1;i>=0;i--){ const f=floaters[i]; f.ttl-=dt; f.y-=34*dt; if(f.ttl<=0) floaters.splice(i,1); }
   if(season!=='summer'){ while(scatterX<S.camX+W+260){ scatter.push({x:scatterX,r:Math.random()}); scatterX+=80+Math.random()*110; }
     for(let i=scatter.length-1;i>=0;i--) if(scatter[i].x<S.camX-60) scatter.splice(i,1); }
-  if(season!=='summer' && (S.gust||0)>.45 && leaves.length<44 && Math.random()<dt*S.gust*7)
+  if(season!=='summer' && (S.gust||0)>.45 && leaves.length<44 && Math.random()<dt*S.gust*7*(1-(S.lullK||0)))
     leaves.push({x:S.camX+Math.random()*W,y:groundY()-2,vy:-(22+Math.random()*30),ph:Math.random()*7,ttl:2.5+Math.random()*1.5});
   if(season==='autumn'){ const fage=S.t-(S.frontT<0?-99:S.frontT); // the front carries visible cargo - leaves lofted at its leading edge, riding with it
     if(fage>=0&&fage<4.2&&leaves.length<52&&Math.random()<dt*7*S.frontG)
@@ -833,7 +834,7 @@ function draw(){
   }
   // kakashi - one still figure over the fields, sleeves lifting when the air moves
   if(kakaOn||ksnowOn){ const kx=((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250, gy=groundY();
-    if(kx>-30&&kx<W+30){ const fag4=S.t-(S.frontT<0?-99:S.frontT), frd4=kx-(-160+fag4*340), hs=(fag4>=0&&fag4<4.5&&Math.abs(frd4)<190)?(1-Math.abs(frd4)/190)*S.frontG:0, sw=Math.sin(S.t*.7)*.07+(S.gust||0)*.16+hs*.22; // the front climbing the hill - it arrives last and broadest up here
+    if(kx>-30&&kx<W+30){ const fag4=S.t-(S.frontT<0?-99:S.frontT), frd4=kx-(-160+fag4*340), hs=(fag4>=0&&fag4<4.5&&Math.abs(frd4)<190)?(1-Math.abs(frd4)/190)*S.frontG:0, sw=Math.sin(S.t*.7)*.07+(S.gust||0)*.16*(1-(S.lullK||0)*.85)+hs*.22; // the front climbing the hill - it arrives last and broadest up here
       const sil=_CSS(_MIX([22,17,11],[46,32,22],dk));
       ctx.fillStyle=sil; ctx.fillRect(kx-1,gy-24,2.4,24); // the post
       ctx.save(); ctx.translate(kx,gy-18); ctx.rotate(sw); // the crossbar rides the breeze
@@ -1072,8 +1073,8 @@ function draw(){
       ctx.beginPath(); ctx.moveTo(nx-nw/2-1,ny-nh-8); ctx.lineTo(nx+nw/2+1,ny-nh-8); ctx.stroke();
       const gu=(S.gust||0), fage=S.t-(S.frontT<0?-99:S.frontT), frd=nx-(-160+fage*340), wv=(fage>=0&&fage<4.5&&Math.abs(frd)<130)?(1-Math.abs(frd)/130)*S.frontG:0, fab=_CSS(_MIX([52,58,86],[72,80,116],dk)), fabD=_CSS(_MIX([40,45,68],[56,64,94],dk)); // the gust front passing this door
       for(let pi=0;pi<3;pi++){ const pw=nw/3, px0=nx-nw/2+pi*pw;
-        const sw=gu*(4+pi*1.7)*(.7+.3*Math.sin(S.t*2.3+pi*2.1+b.x))+Math.sin(S.t*1.4+pi*1.3+b.x)*.5; // each panel takes the wind its own way
-        const up=toshiOn?nh-5:gu*(2.5+pi*.8)+wv*(3.5+pi), sw2=toshiOn?sw*.25:sw+wv*(2+pi); // on the year's last night the curtain is tied up - the shop stays open
+        const sw=gu*(4+pi*1.7)*(.7+.3*Math.sin(S.t*2.3+pi*2.1+b.x))*(1-(S.lullK||0)*.85)+Math.sin(S.t*1.4+pi*1.3+b.x)*.5*(1-(S.lullK||0)*.5); // each panel takes the wind its own way
+        const up=toshiOn?nh-5:gu*(2.5+pi*.8)*(1-(S.lullK||0)*.85)+wv*(3.5+pi), sw2=toshiOn?sw*.25:sw+wv*(2+pi); // on the year's last night the curtain is tied up - the shop stays open
         ctx.fillStyle=pi===1?fab:fabD;
         ctx.beginPath(); ctx.moveTo(px0,ny-nh-7); ctx.lineTo(px0+pw-1,ny-nh-7);
         ctx.lineTo(px0+pw-1+sw2,ny-8-up); ctx.lineTo(px0+sw2,ny-8-up); ctx.closePath(); ctx.fill(); }
@@ -1147,7 +1148,7 @@ function draw(){
             ctx.beginPath(); ctx.ellipse(dx,dy,1,1.4+u*1.4,0,0,7); ctx.fill();
             if(u<.12){ ctx.fillStyle='rgba(230,240,248,'+(da*.8).toFixed(3)+')'; ctx.fillRect(dx-.6,ey+.4,1.2,1.4); } } } } } // the bead still on the lip
       ctx.fillStyle=_CSS(_MIX([31,23,16],[58,40,28],dk)); // hand the next house its own color back
-    if(norenPair(b)){ const fag2=S.t-(S.frontT<0?-99:S.frontT), frd2=(rx+b.w*.5)-(-160+fag2*340), wv2=(fag2>=0&&fag2<4.5&&Math.abs(frd2)<130)?(1-Math.abs(frd2)/130)*S.frontG:0, ang=(S.gust||0)*(.5+.3*Math.sin(S.t*1.1+b.x))+.06*Math.sin(S.t*1.7+b.x)+wv2*.8; // the chime answers the same gusts as the curtain below - and the same front as it passes
+    if(norenPair(b)){ const fag2=S.t-(S.frontT<0?-99:S.frontT), frd2=(rx+b.w*.5)-(-160+fag2*340), wv2=(fag2>=0&&fag2<4.5&&Math.abs(frd2)<130)?(1-Math.abs(frd2)/130)*S.frontG:0, ang=(S.gust||0)*(.5+.3*Math.sin(S.t*1.1+b.x))*(1-(S.lullK||0)*.85)+.06*Math.sin(S.t*1.7+b.x)+wv2*.8; // the chime answers the same gusts as the curtain below - and the same front as it passes
       const nr2=mulberry32((seedNum^0x7b2d)+Math.round(b.x)); const frx=rx+b.w*(.3+nr2()*.4), fry=groundY()-b.h+2, lit=(1-Math.cos(2*Math.PI*MP))/2; // hung from the eave above the doorway
       ctx.strokeStyle=_CSS(_MIX([60,50,36],[84,70,50],dk)); ctx.lineWidth=.8;
       ctx.beginPath(); ctx.moveTo(frx,fry); ctx.lineTo(frx+Math.sin(ang)*7,fry+Math.cos(ang)*7); ctx.stroke(); // the cord
@@ -1518,7 +1519,7 @@ function draw(){
     // furin - a wind chime under the far eave, its paper strip lifting when the gusts rise
     const fx3=wx+42, fy3=gy-46; // hung from the roof's far corner
     const calm3=(fx3<420&&fx3>160)?Math.sin((420-fx3)/260*Math.PI):0; // the same calm that stills the kettle - the chime's small voice pausing as she passes
-    const ln3=(S.gust||0)*(S.gust||0), fth=(((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))+ln3*.4*(1+.3*Math.sin(S.t*1.9)))*(1-calm3)+.1*Math.sin(S.t*2.2)*(1-calm3); // it swings with the gusts - wide and held off-center on the windy beats - and goes still in the calm
+    const ln3=(S.gust||0)*(S.gust||0), fth=(((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))+ln3*.4*(1+.3*Math.sin(S.t*1.9)))*(1-calm3)*(1-(S.lullK||0)*.85)+.1*Math.sin(S.t*2.2)*(1-calm3); // it swings with the gusts - wide and held off-center on the windy beats - and goes still in the calm
     ctx.save(); ctx.translate(fx3,fy3); ctx.rotate(fth*.5);
     ctx.strokeStyle=_CSS(_MIX([90,70,50],[120,95,68],dk)); ctx.lineWidth=.7; // its cord
     ctx.beginPath(); ctx.moveTo(0,-.5); ctx.lineTo(0,.6); ctx.stroke();
@@ -1570,7 +1571,7 @@ function draw(){
     ctx.fillStyle=cloth;
     ctx.beginPath(); ctx.moveTo(px-5+lean*.8,gy-27); ctx.lineTo(px+5+lean*.8,gy-27); ctx.lineTo(px+4+lean*.4,gy-14); ctx.lineTo(px-4+lean*.4,gy-14); ctx.closePath(); ctx.fill();
     for(const sd of [-1,1]){ const shx=px+sd*11+lean*.8, shy=gy-27; // each sleeve hangs from the crossbar
-      const lift=g*9+srge*7, setl=Math.max(0,1-g*3), flut=Math.sin(S.t*7+sd*2)*g*1.6+srge*Math.sin(S.t*9+sd*2.6)*2;
+      const lift=g*9*(1-(S.lullK||0)*.8)+srge*7, setl=Math.max(0,1-g*3), flut=Math.sin(S.t*7+sd*2)*g*1.6*(1-(S.lullK||0)*.8)+srge*Math.sin(S.t*9+sd*2.6)*2;
       const ex3=shx+sd*(3+g*4-setl*1.4), ey3=shy+9-lift+flut+setl*2.6; // they lift with the gusts, and settle lower when the wind dies
       ctx.strokeStyle=cloth; ctx.lineWidth=2.4;
       ctx.beginPath(); ctx.moveTo(shx,shy); ctx.quadraticCurveTo(shx+sd*2,shy+5-lift*.5,ex3,ey3); ctx.stroke(); }
@@ -1790,7 +1791,7 @@ function draw(){
       const fage=S.t-(S.frontT<0?-99:S.frontT);
       const tcols=[[86,96,138],[212,204,186],[148,150,152]]; // indigo, cream, grey
       for(let ti=0;ti<3;ti++){ const tx=wx+8+ti*11, frd=tx-(-160+fage*340), snp=(fage>=0&&fage<4.5&&Math.abs(frd)<40)?(1-Math.abs(frd)/40)*S.frontG:0; // the front reaching THIS towel
-        const sw=(Math.sin(S.t*1.3+ti*1.7)*1.2+(S.gust||0)*2.2)*(1-snp*.75), fl2=snp*Math.sin(S.t*22+ti*2.4)*1.4; // the snap stills the sway into a shiver
+        const sw=(Math.sin(S.t*1.3+ti*1.7)*1.2+(S.gust||0)*2.2*(1-(S.lullK||0)*.85))*(1-snp*.75), fl2=snp*Math.sin(S.t*22+ti*2.4)*1.4; // the snap stills the sway into a shiver
         const lw=7+3.5*snp, ex=tx+sw+fl2, ey=gy-33.4+15-4.5*snp; // it fills out and lifts toward horizontal
         ctx.fillStyle=_CSS(_MIX(tcols[ti],[Math.min(255,tcols[ti][0]+26),Math.min(255,tcols[ti][1]+24),Math.min(255,tcols[ti][2]+20)],dk2));
         ctx.beginPath(); ctx.moveTo(tx-3.5,gy-33.4); ctx.lineTo(tx+3.5,gy-33.4); ctx.lineTo(ex+lw-3.5,ey); ctx.lineTo(ex-3.5,ey); ctx.closePath(); ctx.fill(); } } } }
