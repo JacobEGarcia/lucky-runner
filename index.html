@@ -1641,7 +1641,13 @@ function draw(){
     ctx.strokeStyle=_CSS(_MIX([44,40,24],[60,54,32],dk)); ctx.lineWidth=.8;
     for(let si=0;si<18;si++){ const sx3=wx-18+dr2()*116;
       ctx.beginPath(); ctx.moveTo(sx3,gy-1); ctx.lineTo(sx3,gy-3-dr2()*2); ctx.stroke(); }
-    const dewK=Math.max(0,Math.min(1,(dk-.55)/.25)); // the glints come with the light
+    const dewK=Math.max(0,Math.min(1,(dk-.88)/.12)); // the rest of the field follows, once the sun is truly up
+    { const seamK=Math.max(0,Math.min(1,(dk-.78)/.12)); // one seam catches the first real sun before the rest
+      if(seamK>.02){ const dr4=mulberry32((seedNum^0x5c31)+29);
+        const sy=gy-1.2-dr4()*1.8, sx0=wx-8+dr4()*44;
+        for(let gi=0;gi<5;gi++){ const tw2=.45+.55*Math.max(0,Math.sin(S.t*1.5+gi*2.9));
+          ctx.fillStyle='rgba(248,240,214,'+(.6*seamK*tw2).toFixed(3)+')';
+          ctx.fillRect(sx0+gi*15,sy,1,1); } } }
     if(dewK>.02){ const dr3=mulberry32((seedNum^0x5c31)+13);
       for(let di=0;di<12;di++){ const dx3=wx-14+dr3()*108, dy3=gy-1-dr3()*3.4, tw=.35+.65*Math.max(0,Math.sin(S.t*1.5+di*2.9)); // each glint answers in its own time
         ctx.fillStyle='rgba(238,244,230,'+(.55*dewK*tw).toFixed(3)+')';
