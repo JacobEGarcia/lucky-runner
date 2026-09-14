@@ -1445,8 +1445,8 @@ function draw(){
     ctx.fillStyle=cloth;
     ctx.beginPath(); ctx.moveTo(px-5+lean*.8,gy-27); ctx.lineTo(px+5+lean*.8,gy-27); ctx.lineTo(px+4+lean*.4,gy-14); ctx.lineTo(px-4+lean*.4,gy-14); ctx.closePath(); ctx.fill();
     for(const sd of [-1,1]){ const shx=px+sd*11+lean*.8, shy=gy-27; // each sleeve hangs from the crossbar
-      const lift=g*9, flut=Math.sin(S.t*7+sd*2)*g*1.6;
-      const ex3=shx+sd*(3+g*4), ey3=shy+9-lift+flut;
+      const lift=g*9, setl=Math.max(0,1-g*3), flut=Math.sin(S.t*7+sd*2)*g*1.6;
+      const ex3=shx+sd*(3+g*4-setl*1.4), ey3=shy+9-lift+flut+setl*2.6; // they lift with the gusts, and settle lower when the wind dies
       ctx.strokeStyle=cloth; ctx.lineWidth=2.4;
       ctx.beginPath(); ctx.moveTo(shx,shy); ctx.quadraticCurveTo(shx+sd*2,shy+5-lift*.5,ex3,ey3); ctx.stroke(); }
     ctx.strokeStyle='rgba(224,232,244,'+(.14*(1-dk*.5)).toFixed(3)+')'; ctx.lineWidth=.8; // moon rim down the right
