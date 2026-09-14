@@ -472,7 +472,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; S.emaB=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -501,7 +501,9 @@ function update(dt){
   { const pvG=S.gPv||0, nwG=S.gust||0; // the air as it actually moves, not as it intends
     if(pvG<.5&&nwG>=.5){ S.edgeN=(S.edgeN||0)+1; if(S.gstT>=0&&(S.t-S.gstT)<(S.minGap||99)) S.minGap=S.t-S.gstT; if(emaOn&&S.gstT>=0&&S.t-S.gstT<11){ S.emaT=S.t; S.emaN++; tone(420,260,.05,'triangle',.04); tone(840,700,.03,'triangle',.012,.01); } S.gstT=S.t; }
     S.gPv=nwG; } // two gusts arriving close together - the ema knock once, wood on wood, only when the air hurries
-  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
+  { const eAgU=ematPin>=0?ematPin:(S.emaT<0?-1:S.t-S.emaT); // the row still trembling
+    if(emaOn&&!S.emaB&&eAgU>=0&&eAgU<1.6&&emaX-S.camX<cat.x){ S.emaB=1; tone(300,240,.04,'triangle',.018,.02); } } // and if she passes mid-shiver, one extra soft tick - the row acknowledging her
+  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' emaB'+(S.emaB||0)+' ex'+Math.round(emaX-S.camX)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
   if(S.invuln>0) S.invuln-=dt;
   if(!S.charmGot && S.dist>=2000){ S.charmGot=true; S.charm=true; spawnDust(cat.x,cat.y-60,30,GOLDL);
     floaters.push({x:cat.x+10,y:cat.y-96,txt:'SECOND WIND - a lucky charm',ttl:1.6,col:GOLDL}); sfxMile(); tone(1568,1568,.3,'sine',.06,.12); }
@@ -1848,7 +1850,7 @@ function draw(){
       ctx.strokeStyle=wd; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,2.4); ctx.stroke(); // the string
       ctx.fillStyle=(hazaOn&&i===emaFresh)?_CSS(_MIX([158,122,76],[110,82,52],dk)):pq; ctx.beginPath(); ctx.moveTo(-2.3,2.4); ctx.lineTo(2.3,2.4); ctx.lineTo(2.3,6); ctx.lineTo(0,8.1); ctx.lineTo(-2.3,6); ctx.closePath(); ctx.fill(); // the plaque - on harvest weeks one hangs fresh-bright among the weathered five, someone's new wish
       ctx.restore(); }
-    if(qs.get('edbg')) document.title=('|E eAg'+eAg.toFixed(2)+' kw'+kw.toFixed(3)+' emaN'+S.emaN+' gstT'+S.gstT.toFixed(1)); // DEBUG
+    if(qs.get('edbg2')) document.title=('|E eAg'+eAg.toFixed(2)+' kw'+kw.toFixed(3)+' emaN'+S.emaN+' gstT'+S.gstT.toFixed(1)); // DEBUG
   } }
   // akatombo - red dragonflies hovering low over the road; they dart away when she runs through
   if(akaOn){ const wx=akaX-S.camX; if(wx>-140&&wx<W+140){ const gy=groundY();
