@@ -854,7 +854,16 @@ function draw(){
               const wfl=Math.abs(Math.sin(S.t*22+ph2));
               ctx.beginPath(); ctx.moveTo(-.2,-.5); ctx.lineTo(-1.8,-2.4-2.2*wfl); ctx.stroke();
               ctx.beginPath(); ctx.moveTo(.3,-.4); ctx.lineTo(1.6,-1.9-1.8*wfl); ctx.stroke(); }
-            ctx.restore(); } } }
+            ctx.restore(); }
+          { const lfT=ft>=0?ft-2.3:-1; // her loop brushes the post's shoulder mid-swing
+            if(lfT<1.5){ let lfx=kx+away*2, lfy=gy-18.5, lrot=-.4;
+              if(lfT>0){ lfy+=lfT*lfT*9; lfx+=away*lfT*3+Math.sin(lfT*7)*1.6; lrot=-.4+lfT*2.2; } // one fallen leaf startles off and flutters down
+              ctx.save(); ctx.translate(lfx,lfy); ctx.rotate(lrot);
+              ctx.fillStyle=_CSS(_MIX([96,58,26],[150,96,40],dk));
+              ctx.beginPath(); ctx.ellipse(0,0,2.6,1.4,0,0,7); ctx.fill();
+              ctx.strokeStyle=_CSS(_MIX([70,42,20],[110,70,30],dk)); ctx.lineWidth=.8;
+              ctx.beginPath(); ctx.moveTo(-2.6,0); ctx.lineTo(-3.8,.8); ctx.stroke(); // stem
+              ctx.restore(); } } } }
       if(kazaOn){ ctx.strokeStyle=_CSS(_MIX([22,17,11],[46,32,22],dk)); ctx.lineWidth=1;
         ctx.beginPath(); ctx.moveTo(kx,gy-12); ctx.lineTo(kx-4.5,gy-11); ctx.stroke(); // the little stick it's pinned on
         ctx.save(); ctx.translate(kx-5,gy-10); const rot=S.kazaA||0;
