@@ -473,7 +473,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; S.emaB=0; S.pipT=-1; S.pipN=0; S.feaT=-1; S.feaN=0; S.feaSX=0; S.feaWX=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; S.emaB=0; S.pipT=-1; S.pipN=0; S.feaT=-1; S.feaN=0; S.feaSX=0; S.feaWX=-1; S.feaF=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -504,7 +504,7 @@ function update(dt){
     S.gPv=nwG; } // two gusts arriving close together - the ema knock once, wood on wood, only when the air hurries
   { const eAgU=ematPin>=0?ematPin:(S.emaT<0?-1:S.t-S.emaT); // the row still trembling
     if(emaOn&&!S.emaB&&eAgU>=0&&eAgU<1.6&&emaX-S.camX<cat.x){ S.emaB=1; tone(300,240,.04,'triangle',.018,.02); } } // and if she passes mid-shiver, one extra soft tick - the row acknowledging her
-  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' emaB'+(S.emaB||0)+' pipN'+(S.pipN||0)+' feaN'+(S.feaN||0)+' feaWX'+Math.round(S.feaWX||-1)+' ex'+Math.round(emaX-S.camX)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
+  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' emaB'+(S.emaB||0)+' pipN'+(S.pipN||0)+' feaN'+(S.feaN||0)+' feaWX'+Math.round(S.feaWX||-1)+' feaF'+(S.feaF||-1).toFixed(1)+' minF'+(S.minF==null?-999:Math.round(S.minF))+' og'+(S.dbgOG==null?-1:S.dbgOG)+' ex'+Math.round(emaX-S.camX)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
   if(S.invuln>0) S.invuln-=dt;
   if(!S.charmGot && S.dist>=2000){ S.charmGot=true; S.charm=true; spawnDust(cat.x,cat.y-60,30,GOLDL);
     floaters.push({x:cat.x+10,y:cat.y-96,txt:'SECOND WIND - a lucky charm',ttl:1.6,col:GOLDL}); sfxMile(); tone(1568,1568,.3,'sine',.06,.12); }
@@ -518,7 +518,9 @@ function update(dt){
   if(S.pipT>0&&S.t>=S.pipT){ S.pipT=-1; S.pipN++; tone(4200,3600,.03,'triangle',.004); } // its one dry pip as it enters the sky - not the pair's song, a sparrow's chip
   if(kakaOn&&S.feaT<0&&S.feaN===0&&S.birdT>=0){ S.feaT=S.t+7.5; } // one feather stays behind when the crossing is done
   if(S.feaT>0&&S.t>=S.feaT&&S.feaN===0){ S.feaN=1; S.feaSX=(((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250); S.feaT=S.t; } // it lets go of the post
-  if(S.feaN===1&&S.feaWX<0&&S.t>=S.feaT+4.5){ S.feaWX=S.camX+S.feaSX+55; } // and settles in the path
+  if(S.feaN===1&&S.feaWX<0&&S.t>=S.feaT+4.5){ S.feaWX=S.camX+S.feaSX+163; } // and settles in the path, the wind carrying it down-street
+  if(S.feaWX>=0&&S.feaF<0&&cat.onGround&&S.feaWX-S.camX<cat.x&&S.feaWX-S.camX>cat.x-30){ S.feaF=S.t; } // and if her stride lands beside it, it stirs once - a leap over leaves it be
+  if(S.feaWX>=0){ const dF=S.feaWX-S.camX-cat.x; if(dF<(S.minF==null?999:S.minF)) S.minF=dF; if(Math.abs(dF)<40) S.dbgOG=cat.onGround?1:0; } // DEBUG
   { const spOn=spPin!==null?spPin:(kakaOn&&dawnK()>.75);
     const skx=((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250;
     if(spOn&&S.spT<0&&skx>-30&&skx<W+30&&Math.abs(skx-cat.x)<70){ S.spT=S.t; S.spHad=true; tone(1900,2400,.1,'sine',.018,.01); tone(2300,2800,.08,'sine',.014,.02); } // wings off the arms
@@ -1861,13 +1863,14 @@ function draw(){
   // one stray feather off the post - drifting down after the crossing, then lying in the path for whoever walks through next
   { const feaDemo=featPin>=0; if((S.feaN>=1||feaDemo)){ const gy=groundY(), fth=_CSS(_MIX([122,106,82],[74,62,48],dk));
     const fa=feaDemo?Math.min(featPin,4.49):S.t-S.feaT, dr=feaDemo?(featPin<4.5?1:0):(S.feaWX<0?1:0);
-    if(dr&&fa>=0&&fa<4.5){ const q=fa/4.5, fx=(feaDemo?cat.x+180:S.feaSX)+Math.sin(fa*1.3)*18+fa*12, fy=gy-30+28*q*q*(3-2*q);
+    if(dr&&fa>=0&&fa<4.5){ const q=fa/4.5, fx=(feaDemo?cat.x+180:S.feaSX)+Math.sin(fa*1.3)*18+fa*38, fy=gy-30+28*q*q*(3-2*q); // carried down-street, the way the wind blows here
       ctx.save(); ctx.translate(fx,fy); ctx.rotate(Math.sin(fa*2.1)*.5);
       ctx.strokeStyle=fth; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,-2.5); ctx.lineTo(0,2.5); ctx.stroke(); // the quill
       ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(0,-1.6); ctx.lineTo(1.8,-2.4); ctx.moveTo(0,-.4); ctx.lineTo(2,-1); ctx.moveTo(0,.8); ctx.lineTo(1.8,.4); ctx.stroke(); // the barbs
       ctx.restore(); }
     const lwx=feaDemo?(featPin>=4.5?S.camX+cat.x+180:-1):S.feaWX;
-    if(lwx>=0){ const fx=lwx-S.camX; if(fx>-10&&fx<W+10){ ctx.save(); ctx.translate(fx,gy-1.6); ctx.rotate(.9);
+    if(lwx>=0){ const fx=lwx-S.camX; if(fx>-10&&fx<W+10){ const fA2=feaDemo&&featPin>=9.5?featPin-9.5:(S.feaF<0?-1:S.t-S.feaF), fl=(fA2>=0&&fA2<.7)?Math.sin(Math.min(1,fA2/.7)*Math.PI):0; // the stir - a half-turn flip, a small lift, then still
+      ctx.save(); ctx.translate(fx,gy-1.6-fl*2); ctx.rotate(.9+fl*Math.PI);
       ctx.strokeStyle=fth; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,-2.2); ctx.lineTo(0,2.2); ctx.stroke();
       ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(0,-1.4); ctx.lineTo(1.6,-2); ctx.moveTo(0,-.2); ctx.lineTo(1.8,-.7); ctx.moveTo(0,1); ctx.lineTo(1.5,.7); ctx.stroke();
       ctx.restore(); } } } }
