@@ -1575,7 +1575,8 @@ function draw(){
       ctx.fillStyle='rgba(240,178,88,'+(.75*fl*(1-dk*.25)).toFixed(3)+')';
       ctx.beginPath(); ctx.ellipse(fx,gy-3,1.1,.9,0,0,7); ctx.fill(); // its heart
       for(let wi=0;wi<4;wi++){ const wu=((S.t*.16+wi/4+fi*.13)%1); // the column rises and leans away with the wind
-        const wy2=gy-4-wu*26, wx2=fx+g2*wu*20+Math.sin(S.t*.7+wi+fi)*wu;
+        const calm2=(fx<560&&fx>300)?Math.sin((560-fx)/260*Math.PI):0; // the same calm that stills the kettle - one air over the field, settling fire by fire ahead of her
+        const wy2=gy-4-wu*26, wx2=fx+(g2*wu*20+Math.sin(S.t*.7+wi+fi)*wu)*(1-calm2);
         ctx.fillStyle='rgba(196,192,184,'+((1-wu)*.2*(1-dk*.35)).toFixed(3)+')';
         ctx.beginPath(); ctx.ellipse(wx2,wy2,1+wu*2.6,1.6+wu*3.4,0,0,7); ctx.fill(); } } }
   // the river gap - a moon-viewing boat far off on the water, one lantern aboard, drifting with the current
