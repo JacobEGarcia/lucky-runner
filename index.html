@@ -1421,7 +1421,7 @@ function draw(){
     { const ar3=mulberry32((seedNum^0x51c7)+5); // the answering chime - a second furin on a far eave across the street
       const ax=wx+(ar3()<.5?-1:1)*(104+ar3()*52), ay=gy-118;
       const t2=S.t-.8; // it answers a beat late
-      const fth2=((S.gust||0)*.75)*(1+.4*Math.sin(t2*5.3))+.1*Math.sin(t2*2.2);
+      const fth2=bellOn?0:((S.gust||0)*.75)*(1+.4*Math.sin(t2*5.3))+.1*Math.sin(t2*2.2); // on the rare nights the far bell carries, the answering chime holds its quiet - the street keeping still
       ctx.strokeStyle=_CSS(_MIX([44,36,28],[60,50,38],dk)); ctx.lineWidth=1.1; // the far eave's edge
       ctx.beginPath(); ctx.moveTo(ax-16,ay); ctx.lineTo(ax+10,ay); ctx.stroke();
       ctx.save(); ctx.translate(ax,ay); ctx.rotate(fth2*.5);
