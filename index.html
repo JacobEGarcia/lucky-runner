@@ -341,6 +341,10 @@ const lflyX=7300+mulberry32(seedNum^0x2b3f)()*400; // where it crosses along the
 const dewPin=qs.get('dew')!=null?+qs.get('dew')>0:null; // QA: force on/off
 const dewOn=dewPin!==null?dewPin:season==='autumn';
 const dewX=41500+mulberry32(seedNum^0x5c31)()*1500; // the field lies past the dawn line
+// akeya - the noren shop slides its first morning panel open as she passes at full dawn
+const shopPin=qs.get('shop')!=null?+qs.get('shop')>0:null; // QA: force on/off
+const shopOn=shopPin!==null?shopPin:true;
+const shopX=50500+mulberry32(seedNum^0x6d21)()*1500; // it stands where the morning is full
 // kaki - a persimmon tree heavy with fruit, a couple fallen to the roadside
 const kakiPin=qs.get('kaki')!=null?+qs.get('kaki')>0:null; // QA: force on/off
 const kakiOn=kakiPin!==null?kakiPin:season==='autumn';
@@ -449,7 +453,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -479,6 +483,7 @@ function update(dt){
   if(!S.charmGot && S.dist>=2000){ S.charmGot=true; S.charm=true; spawnDust(cat.x,cat.y-60,30,GOLDL);
     floaters.push({x:cat.x+10,y:cat.y-96,txt:'SECOND WIND - a lucky charm',ttl:1.6,col:GOLDL}); sfxMile(); tone(1568,1568,.3,'sine',.06,.12); }
   if(S.starT<0&&S.dist>=starD){ S.starT=S.t; } // the night's one shooting star
+  if(shopOn&&S.shopT<0&&shopX-S.camX<W*.85){ S.shopT=S.t; } // the shopkeeper starts the first panel as she comes
   if(lflyOn&&S.lflyT<0&&lflyX-S.camX<W*1.5){ S.lflyT=S.t; } // the late firefly sets off before it enters view
   if(S.birdT<0&&S.dist>=birdD){ S.birdT=S.t; } // first light brings the birds
   { const spOn=spPin!==null?spPin:(kakaOn&&dawnK()>.75);
@@ -1610,6 +1615,27 @@ function draw(){
       for(let di=0;di<12;di++){ const dx3=wx-14+dr3()*108, dy3=gy-1-dr3()*3.4, tw=.35+.65*Math.max(0,Math.sin(S.t*1.5+di*2.9)); // each glint answers in its own time
         ctx.fillStyle='rgba(238,244,230,'+(.55*dewK*tw).toFixed(3)+')';
         ctx.fillRect(dx3,dy3,1,1); } } } }
+  // akeya - the noren shop, its first morning panel mid-slide as she passes
+  if(shopOn){ const wx=shopX-S.camX; if(wx>-120&&wx<W+120){ const gy=groundY();
+    const sk=S.shopT<0?0:Math.min(1,(S.t-S.shopT)/2.8), se=sk*sk*(3-2*sk); // the slow slide
+    ctx.fillStyle=_CSS(_MIX([18,15,11],[30,24,18],dk)); ctx.fillRect(wx-38,gy-46,76,4); // the eave
+    ctx.fillStyle=_CSS(_MIX([30,24,17],[52,40,28],dk)); ctx.fillRect(wx-34,gy-42,68,42); // the storefront face
+    ctx.fillStyle=_CSS(_MIX([22,17,12],[38,29,20],dk)); ctx.fillRect(wx-34,gy-42,68,4); // the lintel beam
+    ctx.fillStyle=_CSS(_MIX([12,9,6],[20,15,10],dk)); ctx.fillRect(wx-30,gy-30,60,30); // the dark behind the panels
+    if(se>0){ const wa2=se*(.5+.5*Math.min(1,dk)); // the shop's own morning light showing through
+      ctx.fillStyle='rgba(240,200,120,'+(.4*wa2).toFixed(3)+')'; ctx.fillRect(wx-30,gy-30,15*se,30);
+      ctx.fillStyle='rgba(233,180,80,'+(.1*wa2).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(wx-22,gy+2,14,3,0,0,7); ctx.fill(); } // and spilled out front
+    ctx.fillStyle=_CSS(_MIX([46,36,24],[66,52,36],dk));
+    ctx.fillRect(wx-30+se*15,gy-30,14,30); // the first panel, mid-slide
+    ctx.fillStyle=_CSS(_MIX([40,31,21],[58,45,31],dk));
+    ctx.fillRect(wx-14,gy-30,14,30); ctx.fillRect(wx+2,gy-30,14,30); ctx.fillRect(wx+18,gy-30,12,30); // the rest still shut
+    const nw2=20, fab2=_CSS(_MIX([52,58,86],[72,80,116],dk)), fabD2=_CSS(_MIX([40,45,68],[56,64,94],dk)); // the noren above
+    ctx.strokeStyle=_CSS(_MIX([60,50,36],[84,70,50],dk)); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(wx-nw2/2-1,gy-37); ctx.lineTo(wx+nw2/2+1,gy-37); ctx.stroke();
+    for(let pi=0;pi<3;pi++){ const pw2=nw2/3, px2=wx-nw2/2+pi*pw2, sw2=Math.sin(S.t*1.4+pi*1.3)*.4;
+      ctx.fillStyle=pi===1?fab2:fabD2;
+      ctx.beginPath(); ctx.moveTo(px2,gy-37); ctx.lineTo(px2+pw2-1,gy-37); ctx.lineTo(px2+pw2-1+sw2,gy-31); ctx.lineTo(px2+sw2,gy-31); ctx.closePath(); ctx.fill(); }
+    ctx.fillStyle='rgba(243,234,216,'+(.5*(1-dk*.2)).toFixed(3)+')'; ctx.beginPath(); ctx.arc(wx,gy-34,1.5,0,7); ctx.fill(); } } // its small cream crest
   // akatombo - red dragonflies hovering low over the road; they dart away when she runs through
   if(akaOn){ const wx=akaX-S.camX; if(wx>-140&&wx<W+140){ const gy=groundY();
     const ar=mulberry32((seedNum^0x5a1e)+7), duskA=1-Math.min(1,dawnK()*1.4); // a dusk thing - it thins as the sky pales
@@ -2263,7 +2289,7 @@ if(qs.get('qa')){
   if(qs.get('gate40')){ gates.push({x:S.camX+cat.x+(+(qs.get('gd')||180)), n:4000, hit:false}); for(let i=0;i<60;i++) update(1/60); }
   if(qs.get('tem')){ const r=18, off=parseFloat(qs.get('tem'))||460; obstacles.push({x:S.camX+cat.x+off, temari:true, r, w:r*2, h:r*2, roll:80, bps:1.05, ph:parseFloat(qs.get('tph'))||.4, cy:groundY()-r, rollA:0, near:false, passed:false});
     for(let i=0;i<26;i++) update(1/60); }
-  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,star:starPin>=0?starPin:(S.starT>=0?+(S.t-S.starT).toFixed(2):-1),breath:((season==='winter'||ameOn)&&S.mode!=='start')?+(breathPin>=0?breathPin:(S.t%3.4)).toFixed(2):-1,bird:birdPin>=0?birdPin:(S.birdT>=0?+(S.t-S.birdT).toFixed(2):-1),dawn:+dawnK().toFixed(2),complete:S.complete?1:0,moon:+MP.toFixed(3),full:+fullK.toFixed(2),gust:+(S.gust||0).toFixed(2),constel:conOn?1:0,train:trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?+(S.t-S.trainT).toFixed(2):-1),matsuri:matsuriOn?1:0,cho:midline.filter(choPair).length,mist:mistOn?1:0,hanabi:(S.hanabi||[]).length,shide:shideOn?1:0,kitsune:kitsuOn?1:0,geese:geesePin>=0?geesePin:(S.geeseT>=0?+(S.t-S.geeseT).toFixed(2):-1),kami:kamiPin>=0?kamiPin:(S.kamiT>=0?+(S.t-S.kamiT).toFixed(2):-1),fire:fireflies.length,prints:prints.length,jizo:jizoList.length,owl:owlList.filter(o=>o.fly<0).length,wed:wedOn?(wedPin>=0?wedPin:(S.wedT>=0?+(S.t-S.wedT).toFixed(2):-1)):0,haza:hazaOn?1:0,kaka:kakaOn?1:0,ksnow:ksnowOn?1:0,toshi:toshiOn?1:0,stair:stairOn?1:0,tsukimi:tsukimiOn?midline.filter(tsukimiPair).length:0,imo:imoOn?midline.filter(imoPair).length:0,cos:cosOn?1:0,kaki:kakiOn?1:0,aka:(akaOn?(S.akaT<0?0:+(S.t-S.akaT).toFixed(2)):-1),pad:(padOn?(S.padT<0?0:+(S.t-S.padT).toFixed(2)):-1),gra:graOn?1:0,ket:(ketOn?(S.ketT<0?0:+(S.t-S.ketT).toFixed(2)):-1),kin:kinOn?1:0,hig:higOn?1:0,sob:sobOn?1:0,kas:kasOn?1:0,ame:ameOn?1:0,ama:(amaOn?(S.amaT<0?0:+(S.t-S.amaT).toFixed(2)):-1),smo:smoOn?1:0,riv:rivOn?1:0,bark:(barkOn?(S.barkT<0?0:+(S.t-S.barkT).toFixed(2)):-1),barkx:(barkOn?barkX:-1),bell:(bellOn?(S.bellT<0?Math.round(S.bellAt-S.t):+(S.t-S.bellT).toFixed(2)):-1),glf:(glfOn?(S.glfT<0?0:+(S.t-S.glfT).toFixed(2)):-1),glfx:(glfOn?glfX:-1),rmist:(rivOn?+Math.max(0,Math.min(1,(dawnK()-.03)*8)).toFixed(2):-1),lfly:(lflyOn?(S.lflyT<0?0:+(S.t-S.lflyT).toFixed(2)):-1),lflyx:(lflyOn?lflyX:-1),dew:(dewOn?1:0),dewx:(dewOn?dewX:-1),moths:(window.__mothN||0),cica:S.cicadaN||0,crick:S.cricketN||0,lcric:(S.lastN||0),suzu:(window.__suzuT!=null?1:0),gaze:+((S.gazeK)||0).toFixed(2),gazeDone:(S.gazeDone?1:0),sp:(spPin!==null?spPin:(kakaOn&&dawnK()>.75))?(spFlyPin>=0?0:(S.spT<0?3:0)):0,frost:frostOn?1:0,kaza:kazaOn?+(S.kazaA||0).toFixed(1):-1,hoshi:midline.filter(hoshiPair).length,steam:midline.filter(steamPair).length,lone:loneOn?1:0,gink:ginkOn?1:0,asa:asaOn?1:0,noren:midline.filter(norenPair).length,drip:dripOn?1:0,bath:bathOn?(S.bathT<0?(season==='winter'&&dawnK()>.45?1:3):0):0,hazax:(hazaOn&&window.__hazaX!=null)?Math.round(window.__hazaX):-1,kane:kaneOn?(S.kaneN||0):-1,hinode:hinodeOn?1:0,darTum:(S.darTum||0),darDev:(()=>{const d=obstacles.find(o=>o.daruma&&o.tumble!==undefined); return d?+d.dev.toFixed(2):-1;})(),err:window.__err||''});
+  if(qs.get('probe')) document.title='PROBE '+JSON.stringify({mode:S.mode,dist:Math.round(S.dist),coins:S.coins,bonus:S.bonus,bells:S.bells||0,combo:coinCombo,charm:S.charm?1:0,charmUsed:S.charmUsed||0,star:starPin>=0?starPin:(S.starT>=0?+(S.t-S.starT).toFixed(2):-1),breath:((season==='winter'||ameOn)&&S.mode!=='start')?+(breathPin>=0?breathPin:(S.t%3.4)).toFixed(2):-1,bird:birdPin>=0?birdPin:(S.birdT>=0?+(S.t-S.birdT).toFixed(2):-1),dawn:+dawnK().toFixed(2),complete:S.complete?1:0,moon:+MP.toFixed(3),full:+fullK.toFixed(2),gust:+(S.gust||0).toFixed(2),constel:conOn?1:0,train:trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?+(S.t-S.trainT).toFixed(2):-1),matsuri:matsuriOn?1:0,cho:midline.filter(choPair).length,mist:mistOn?1:0,hanabi:(S.hanabi||[]).length,shide:shideOn?1:0,kitsune:kitsuOn?1:0,geese:geesePin>=0?geesePin:(S.geeseT>=0?+(S.t-S.geeseT).toFixed(2):-1),kami:kamiPin>=0?kamiPin:(S.kamiT>=0?+(S.t-S.kamiT).toFixed(2):-1),fire:fireflies.length,prints:prints.length,jizo:jizoList.length,owl:owlList.filter(o=>o.fly<0).length,wed:wedOn?(wedPin>=0?wedPin:(S.wedT>=0?+(S.t-S.wedT).toFixed(2):-1)):0,haza:hazaOn?1:0,kaka:kakaOn?1:0,ksnow:ksnowOn?1:0,toshi:toshiOn?1:0,stair:stairOn?1:0,tsukimi:tsukimiOn?midline.filter(tsukimiPair).length:0,imo:imoOn?midline.filter(imoPair).length:0,cos:cosOn?1:0,kaki:kakiOn?1:0,aka:(akaOn?(S.akaT<0?0:+(S.t-S.akaT).toFixed(2)):-1),pad:(padOn?(S.padT<0?0:+(S.t-S.padT).toFixed(2)):-1),gra:graOn?1:0,ket:(ketOn?(S.ketT<0?0:+(S.t-S.ketT).toFixed(2)):-1),kin:kinOn?1:0,hig:higOn?1:0,sob:sobOn?1:0,kas:kasOn?1:0,ame:ameOn?1:0,ama:(amaOn?(S.amaT<0?0:+(S.t-S.amaT).toFixed(2)):-1),smo:smoOn?1:0,riv:rivOn?1:0,bark:(barkOn?(S.barkT<0?0:+(S.t-S.barkT).toFixed(2)):-1),barkx:(barkOn?barkX:-1),bell:(bellOn?(S.bellT<0?Math.round(S.bellAt-S.t):+(S.t-S.bellT).toFixed(2)):-1),glf:(glfOn?(S.glfT<0?0:+(S.t-S.glfT).toFixed(2)):-1),glfx:(glfOn?glfX:-1),rmist:(rivOn?+Math.max(0,Math.min(1,(dawnK()-.03)*8)).toFixed(2):-1),lfly:(lflyOn?(S.lflyT<0?0:+(S.t-S.lflyT).toFixed(2)):-1),lflyx:(lflyOn?lflyX:-1),dew:(dewOn?1:0),dewx:(dewOn?dewX:-1),moths:(window.__mothN||0),shop:(shopOn?(S.shopT<0?0:+(S.t-S.shopT).toFixed(2)):-1),shopx:(shopOn?shopX:-1),cica:S.cicadaN||0,crick:S.cricketN||0,lcric:(S.lastN||0),suzu:(window.__suzuT!=null?1:0),gaze:+((S.gazeK)||0).toFixed(2),gazeDone:(S.gazeDone?1:0),sp:(spPin!==null?spPin:(kakaOn&&dawnK()>.75))?(spFlyPin>=0?0:(S.spT<0?3:0)):0,frost:frostOn?1:0,kaza:kazaOn?+(S.kazaA||0).toFixed(1):-1,hoshi:midline.filter(hoshiPair).length,steam:midline.filter(steamPair).length,lone:loneOn?1:0,gink:ginkOn?1:0,asa:asaOn?1:0,noren:midline.filter(norenPair).length,drip:dripOn?1:0,bath:bathOn?(S.bathT<0?(season==='winter'&&dawnK()>.45?1:3):0):0,hazax:(hazaOn&&window.__hazaX!=null)?Math.round(window.__hazaX):-1,kane:kaneOn?(S.kaneN||0):-1,hinode:hinodeOn?1:0,darTum:(S.darTum||0),darDev:(()=>{const d=obstacles.find(o=>o.daruma&&o.tumble!==undefined); return d?+d.dev.toFixed(2):-1;})(),err:window.__err||''});
   draw();
   }
 }
