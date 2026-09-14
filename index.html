@@ -177,7 +177,7 @@ const kamiR=mulberry32(seedNum^0x4a11);
 const kamiD=900+kamiR()*700, kamiPin=qs.get('kami')!=null?parseFloat(qs.get('kami')):-1; // QA: pin the drift's age
 // the last train home - lit windows stream across the far skyline once per run, seeded into the course
 const trainR=mulberry32(seedNum^0x7ea1);
-const trainD=520+trainR()*460, trainCars=6+Math.floor(trainR()*3), trainPin=qs.get('train')!=null?parseFloat(qs.get('train')):-1; // QA: pin the crossing's age (-1 hides it)
+const trainD=380+trainR()*600, trainCars=6+Math.floor(trainR()*3), trainPin=qs.get('train')!=null?parseFloat(qs.get('train')):-1; // QA: pin the crossing's age (-1 hides it) - the wider floor lets some nights' crossing line up with the river
 // kitsunebi - fox-fire above the far rooftops on autumn and winter nights; pale flames gutter out and relight, gone by dawn
 const kitsuPin=qs.get('kitsune')!=null?+qs.get('kitsune'):-1; // QA: 1 forces on, 0 forces off
 const kitsuOn=kitsuPin>=0?kitsuPin>0:(season==='autumn'||season==='winter');
@@ -1517,6 +1517,14 @@ function draw(){
     if(padLit>.04){ for(let b2=0;b2<3;b2++){ const my=gy-9+b2*2, mw=10-b2*2; // a trembling moon-path on the water
       ctx.strokeStyle='rgba(238,230,204,'+(.16*(1-dk*.3)*padLit).toFixed(3)+')'; ctx.lineWidth=.9;
       ctx.beginPath(); ctx.moveTo(wx-mw/2+Math.sin(S.t*1.8+b2*2)*1.6,my); ctx.lineTo(wx+mw/2+Math.sin(S.t*1.8+b2*2)*1.6,my); ctx.stroke(); } }
+    { const tAge2=trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?S.t-S.trainT:-1); // the last train's lit windows double in the water as it passes
+      if(tAge2>=0&&tAge2<13){ const k2=tAge2/13, front2=W+120-(W+620)*k2;
+        const wa2=(1-dk*.45)*(.82+.18*Math.sin(S.t*13));
+        for(let i=0;i<trainCars;i++){ const cx2=front2+i*30;
+          for(let wI=0;wI<3;wI++){ if(Math.sin(i*7.3+wI*2.9)>-.6){ const wx3=cx2+6.5+wI*7.4; // each warm window
+            const rd=Math.abs(wx3-wx); if(rd<88){ const ra=(1-rd/88)*.19*wa2, rl2=11+wI*1.5+((i*5+wI*3)%4); // its long smear on the water, strongest at mid-river
+              ctx.strokeStyle='rgba(240,208,130,'+ra.toFixed(3)+')'; ctx.lineWidth=1.6;
+              ctx.beginPath(); ctx.moveTo(wx3+Math.sin(S.t*2.1+wI)*.8,gy-11); ctx.lineTo(wx3+Math.sin(S.t*2.1+wI+1)*1.2,gy-11+rl2); ctx.stroke(); } } } } } }
     const bxp=wx-58+((S.t*2.2+67)%116), byp=gy-8; // the boat, drifting slowly across the gap
     ctx.fillStyle='rgba(10,8,5,'+(.35*(1-dk*.2)).toFixed(3)+')'; // its shadow on the water
     ctx.beginPath(); ctx.ellipse(bxp,byp+1.6,9,1.2,0,0,7); ctx.fill();
