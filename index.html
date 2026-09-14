@@ -459,7 +459,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -505,6 +505,8 @@ function update(dt){
   if(season==='autumn'&&S.geeseT<0&&S.dist>=geeseD){ S.geeseT=S.t; } // the skein writes its V across the moon
   if(season==='spring'&&S.kamiT<0&&S.dist>=kamiD){ S.kamiT=S.t; } // somebody's balloon, loose in the evening
   if(S.trainT<0&&S.dist>=trainD){ S.trainT=S.t; } // the last train home
+  if(rivOn&&S.ripT<0){ const tA3=trainPin>=0?(trainPin<0?-1:trainPin):(S.trainT>=0?S.t-S.trainT:-1); // the wake sets out when the lit smears touch the water
+    if(tA3>=0&&tA3<13){ const fr3=W+120-(W+620)*(tA3/13), wxr=rivX-S.camX; if(wxr>-200&&wxr<W+200&&fr3<=wxr+92) S.ripT=S.t; } }
   if(barkOn&&S.barkT<0&&S.dist>=barkX){ S.barkT=S.t; tone(240,190,.09,'triangle',.026,.01); tone(200,160,.08,'triangle',.02,.16); } // a dog barks off in the alleys - her ear flicks toward it
   if(bellOn&&S.bellT<0&&S.t>=S.bellAt){ S.bellT=S.t; tone(98,92,5,'sine',.026,1.2); tone(294,280,2.6,'sine',.007,1.23); tone(492,470,1.3,'sine',.004,1.27); } // the far temple bell on the hour - its strike arriving a breath late, the way distance carries sound
   if(glfOn&&S.glfT<0&&glfX-S.camX<W*1.5){ S.glfT=S.t; } // the lone leaf lets go just before its place enters view
@@ -1606,7 +1608,9 @@ function draw(){
             const rd=Math.abs(wx3-wx); if(rd<88){ const ra=(1-rd/88)*.19*wa2, rl2=11+wI*1.5+((i*5+wI*3)%4); // its long smear on the water, strongest at mid-river
               ctx.strokeStyle='rgba(240,208,130,'+ra.toFixed(3)+')'; ctx.lineWidth=1.6;
               ctx.beginPath(); ctx.moveTo(wx3+Math.sin(S.t*2.1+wI)*.8,gy-11); ctx.lineTo(wx3+Math.sin(S.t*2.1+wI+1)*1.2,gy-11+rl2); ctx.stroke(); } } } } } }
-    const bxp=wx-58+((S.t*2.2+67)%116), byp=gy-8; // the boat, drifting slowly across the gap
+    const bxp=wx-58+((S.t*2.2+67)%116); // the boat, drifting slowly across the gap
+    const rAge=S.ripT<0?-1:S.t-S.ripT, dip=(rAge>=0&&rAge<2.4)?Math.sin(rAge/2.4*Math.PI):0; // the train's wake arriving - one dip, then still again
+    const byp=gy-8+dip*1.1; // the ripple lifts the hull as it passes
     ctx.fillStyle='rgba(10,8,5,'+(.35*(1-dk*.2)).toFixed(3)+')'; // its shadow on the water
     ctx.beginPath(); ctx.ellipse(bxp,byp+1.6,9,1.2,0,0,7); ctx.fill();
     ctx.fillStyle=_CSS(_MIX([30,24,17],[44,35,25],dk)); // the hull
@@ -1614,7 +1618,7 @@ function draw(){
     ctx.fillStyle=_CSS(_MIX([24,20,15],[36,30,22],dk)); // the low cabin roof
     ctx.beginPath(); ctx.ellipse(bxp+1,byp-2.4,4.6,2.4,0,Math.PI,0); ctx.fill();
     const lx=bxp-6.4, calm4=(lx<420&&lx>160)?Math.sin((420-lx)/260*Math.PI):0; // the same calm that stills the kettle - the one light on the water going steady as she passes the mooring
-    const lg=.75+.25*Math.sin(S.t*4.2)*(1-calm4); // one lantern at the bow - its flicker hushed in the calm
+    const lg=(.75+.25*Math.sin(S.t*4.2)*(1-calm4))*(1-.45*dip); // one lantern at the bow - hushed in the calm, and dipping once as the wake arrives
     ctx.fillStyle='rgba(255,190,110,'+(.14*lg*(1-dk*.2)).toFixed(3)+')';
     ctx.beginPath(); ctx.arc(bxp-6.4,byp-3.4,4,0,7); ctx.fill();
     ctx.fillStyle=_CSS(_MIX([196,120,58],[238,170,100],dk));
