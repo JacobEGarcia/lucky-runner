@@ -1087,7 +1087,8 @@ function draw(){
       ctx.fillStyle=_CSS(_MIX([23,27,35],[34,40,52],dk)); // the vase - deep indigo ceramic
       ctx.beginPath(); ctx.ellipse(ex-8,ey-9.5,2.7,3.2,0,0,7); ctx.fill();
       ctx.strokeStyle='rgba(214,200,168,'+(.5*(1-dk*.3)).toFixed(3)+')'; ctx.lineWidth=.8; // the stalks
-      for(let pi=0;pi<3;pi++){ const ph=b.x+pi*2.1, sway=Math.sin(S.t*1.2+ph)*.09+(S.gust||0)*.14; // the plumes lean with the air
+      const fag5=S.t-(S.frontT<0?-99:S.frontT), frd5=ex-(-160+fag5*340), pmp=(fag5>=0&&fag5<4.5&&Math.abs(frd5)<110)?(1-Math.abs(frd5)/110)*S.frontG:0; // the front brushing the engawa
+      for(let pi=0;pi<3;pi++){ const ph=b.x+pi*2.1, sway=Math.sin(S.t*1.2+ph)*.09+(S.gust||0)*.14+pmp*(.15+.08*Math.sin(S.t*13+pi*2.6)); // the plumes lean with the air, and shiver when the front passes
         const tipx=ex-8+(pi-1)*4.2+sway*18, tipy=ey-21-(pi===1?3:0);
         ctx.beginPath(); ctx.moveTo(ex-8,ey-12); ctx.quadraticCurveTo(ex-8+(pi-1)*2,ey-17,tipx,tipy); ctx.stroke();
         ctx.save(); ctx.translate(tipx,tipy); ctx.rotate(sway*2.2+(pi-1)*.16);
