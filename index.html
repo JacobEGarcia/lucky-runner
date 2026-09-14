@@ -1396,6 +1396,21 @@ function draw(){
     ctx.fillRect(-1.1,0,2.2,8);
     ctx.fillStyle='rgba(240,230,210,.35)'; ctx.fillRect(-1.1,0,2.2,1.6); // its pale top edge
     ctx.restore();
+    { const ar3=mulberry32((seedNum^0x51c7)+5); // the answering chime - a second furin on a far eave across the street
+      const ax=wx+(ar3()<.5?-1:1)*(104+ar3()*52), ay=gy-118;
+      const t2=S.t-.8; // it answers a beat late
+      const fth2=((S.gust||0)*.75)*(1+.4*Math.sin(t2*5.3))+.1*Math.sin(t2*2.2);
+      ctx.strokeStyle=_CSS(_MIX([44,36,28],[60,50,38],dk)); ctx.lineWidth=1.1; // the far eave's edge
+      ctx.beginPath(); ctx.moveTo(ax-16,ay); ctx.lineTo(ax+10,ay); ctx.stroke();
+      ctx.save(); ctx.translate(ax,ay); ctx.rotate(fth2*.5);
+      ctx.strokeStyle='rgba(200,206,212,'+(.34*(1-dk*.3)).toFixed(3)+')'; ctx.lineWidth=.8; // its little bell, farther, fainter
+      ctx.beginPath(); ctx.arc(0,2.2,2,3.44,2.84); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-1.9,2.8); ctx.lineTo(1.9,2.8); ctx.stroke();
+      ctx.restore();
+      ctx.save(); ctx.translate(ax,ay+4); ctx.rotate(fth2); // its strip, paler with distance
+      ctx.fillStyle='rgba(196,120,110,'+(.5*(1-dk*.2)).toFixed(3)+')';
+      ctx.fillRect(-1,0,2,6.6);
+      ctx.restore(); }
   } }
   // kakashi - a scarecrow in the harvested field, its sleeves lifting with the gusts
   if(kasOn){ const wx=kasX-S.camX; if(wx>-90&&wx<W+90){ const gy=groundY();
