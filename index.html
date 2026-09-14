@@ -1607,14 +1607,15 @@ function draw(){
     ctx.beginPath(); ctx.moveTo(bxp-9,byp); ctx.quadraticCurveTo(bxp,byp+2.6,bxp+9,byp); ctx.lineTo(bxp+7.6,byp-1.6); ctx.lineTo(bxp-7.6,byp-1.6); ctx.closePath(); ctx.fill();
     ctx.fillStyle=_CSS(_MIX([24,20,15],[36,30,22],dk)); // the low cabin roof
     ctx.beginPath(); ctx.ellipse(bxp+1,byp-2.4,4.6,2.4,0,Math.PI,0); ctx.fill();
-    const lg=.75+.25*Math.sin(S.t*4.2); // one lantern at the bow
+    const lx=bxp-6.4, calm4=(lx<420&&lx>160)?Math.sin((420-lx)/260*Math.PI):0; // the same calm that stills the kettle - the one light on the water going steady as she passes the mooring
+    const lg=.75+.25*Math.sin(S.t*4.2)*(1-calm4); // one lantern at the bow - its flicker hushed in the calm
     ctx.fillStyle='rgba(255,190,110,'+(.14*lg*(1-dk*.2)).toFixed(3)+')';
     ctx.beginPath(); ctx.arc(bxp-6.4,byp-3.4,4,0,7); ctx.fill();
     ctx.fillStyle=_CSS(_MIX([196,120,58],[238,170,100],dk));
     ctx.beginPath(); ctx.ellipse(bxp-6.4,byp-3.4,1.6,2,0,0,7); ctx.fill();
     const calmK=Math.max(0,Math.min(1,1-(S.gust||0)*3)); // the surface going still
     ctx.strokeStyle='rgba(238,180,100,'+(.22*lg*(1-dk*.3)*(1-calmK*.85)).toFixed(3)+')'; ctx.lineWidth=.8; // its trembling reflection, settling as the water calms
-    ctx.beginPath(); ctx.moveTo(bxp-6.4+Math.sin(S.t*2.6)*.6,byp+1); ctx.lineTo(bxp-6.4+Math.sin(S.t*2.6+1)*.8,byp+4.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(lx+Math.sin(S.t*2.6)*.6*(1-calm4),byp+1); ctx.lineTo(lx+Math.sin(S.t*2.6+1)*.8*(1-calm4),byp+4.6); ctx.stroke(); // the trembling reflection stills with the flame
     if(calmK>.3){ const sh=.96+.04*Math.sin(S.t*.9); // the still doubling - the lantern holds its own image on the water
       ctx.fillStyle='rgba(255,190,110,'+(.1*lg*calmK*(1-dk*.2)).toFixed(3)+')';
       ctx.beginPath(); ctx.ellipse(bxp-6.4,byp+3.6,3.2*sh,2.6,0,0,7); ctx.fill();
