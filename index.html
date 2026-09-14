@@ -1213,6 +1213,19 @@ function draw(){
     ctx.fillStyle=fc; ctx.beginPath(); ctx.arc(wx+14,gy-2.5,2.7,0,7); ctx.fill(); // one whole at the foot
     ctx.beginPath(); ctx.arc(wx-20,gy-2.2,2.6,0,7); ctx.fill(); // one split open
     ctx.fillStyle='rgba(246,214,150,'+(.85*(1-dk*.2)).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(wx-20,gy-3.4,1.9,1.1,0,0,7); ctx.fill(); // pale flesh to the sky
+    for(const [cxi,sp] of [[wx+34,0],[wx+47,0],[wx+40,1]]){ // fallen chestnut burrs by the roots
+      ctx.fillStyle='rgba(10,8,5,'+(.4*(1-dk*.2)).toFixed(3)+')'; ctx.beginPath(); ctx.ellipse(cxi,gy-1,4,1.1,0,0,7); ctx.fill(); // its shadow
+      ctx.fillStyle=_CSS(_MIX([64,72,40],[86,96,54],dk)); // the burr, green going brown
+      ctx.beginPath(); ctx.arc(cxi,gy-3,3.1,0,7); ctx.fill();
+      ctx.strokeStyle=_CSS(_MIX([48,56,30],[70,80,44],dk)); ctx.lineWidth=.7; // the spines
+      for(let sq=0;sq<8;sq++){ const sa2=sq*.785+cxi;
+        ctx.beginPath(); ctx.moveTo(cxi+Math.cos(sa2)*2.5,gy-3+Math.sin(sa2)*2.5); ctx.lineTo(cxi+Math.cos(sa2)*4.3,gy-3+Math.sin(sa2)*4.3); ctx.stroke(); }
+      if(sp){ ctx.fillStyle=_CSS(_MIX([88,52,26],[112,68,36],dk)); // one split open - the nut, polished dark
+        ctx.beginPath(); ctx.ellipse(cxi,gy-3.5,2.3,1.9,0,0,7); ctx.fill();
+        ctx.fillStyle='rgba(238,220,180,'+(.55*(1-dk*.3)).toFixed(3)+')'; // its shine
+        ctx.beginPath(); ctx.ellipse(cxi-.7,gy-4.3,.8,.5,-.5,0,7); ctx.fill();
+        ctx.fillStyle=_CSS(_MIX([178,152,104],[196,170,120],dk)); // the pale base scar
+        ctx.beginPath(); ctx.ellipse(cxi,gy-2,1.5,.8,0,0,7); ctx.fill(); } }
     ctx.strokeStyle='rgba(224,232,244,'+(.18*(1-dk*.5)).toFixed(3)+')'; ctx.lineWidth=1; // moonlight down the trunk's right side
     ctx.beginPath(); ctx.moveTo(wx+1.4,gy-1); ctx.quadraticCurveTo(wx-1.4,gy-30,wx-4.4,gy-50); ctx.stroke();
   } }
