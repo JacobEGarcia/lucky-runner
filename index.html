@@ -910,6 +910,8 @@ function draw(){
         if(spOn){ const ft=spFlyPin>=0?spFlyPin:(S.spT>=0?S.t-S.spT:-1);
           const cs=Math.cos(sw), sn=Math.sin(sw), bx=kx-cat.x, away=(bx>0?1:-1);
           for(let i=0;i<4;i++){ let px,py;
+            { const bAg2=birdPin>=0?birdPin:(S.birdT>=0?S.t-S.birdT:-1); if(i===3&&kakaOn&&bAg2>=1.1&&bAg2<7) continue; } // on harvest mornings the post stands one sparrow lighter - the latecomer is off catching the dawn pair, back when the crossing is done
+            if(i===3&&qs.get('spmark')){ ctx.fillStyle='#f0f'; ctx.fillRect(kx-3,gy-14,7,7); } // DEBUG MARKER
             const ph2=spPh[i%3];
             if(i===3){ px=kx+2.5; py=gy-8; } // the latecomer perches on the post itself
             else if(i===0){ px=kx; py=gy-37.2; } else { const lx=i===1?-10.5:10.5; px=kx+cs*lx-sn*-2.5; py=gy-18+sn*lx+cs*-2.5; }
