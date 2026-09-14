@@ -461,7 +461,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -527,7 +527,8 @@ function update(dt){
   if(padOn&&S.padT<0&&Math.abs(padX-S.camX-W*.26)<90){ S.padT=S.t; } // her passing troubles the water
   if(ketOn&&S.ketT<0&&Math.abs(ketX-S.camX-W*.26)<80){ S.ketT=S.t; } // her slipstream bends the wisp
   if(amaOn&&S.amaT<0&&amaX-S.camX<W*.72&&(S.gust||0)>.55){ S.amaT=S.t; } // a real gust sets the loose amado creaking as the shop stands in view
-  if(kazaOn){ S.kazaA+=dt*(1.5+(S.gust||0)*20); // the pinwheel turns with the air
+  if(kazaOn){ S.kazaW=(S.kazaW||0)+((S.gustGoal||0)-(S.kazaW||0))*Math.min(1,dt*6); // its paper is lighter than the air - it answers the gust's intention
+    S.kazaA+=dt*(1.5+Math.max(S.gust||0,S.kazaW||0)*20); // the pinwheel turns with the air, and half a beat before it
     const ka2=S.kakT<0?-1:S.t-S.kakT; if(ka2>=0&&ka2<2.2){ const sp2=1-ka2/2.2; S.kazaA+=dt*17*sp2*sp2; } // and one hard spin as that first morning gust passes - two quick turns, easing out
     const ia2=S.ichoT<0?-1:S.t-S.ichoT; // and one answering flutter if the icho leaf passes with the pinwheel still in view behind her
     if(ia2>=0&&ia2<1.2){ const kx2=(((kakaX-S.camX*.35)%1360+1110)%1360+1360)%1360-250; if(kx2>-20&&kx2<W+20) S.kazaA+=dt*9*Math.sin(ia2/1.2*Math.PI); } }
