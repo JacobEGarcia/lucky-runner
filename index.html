@@ -502,7 +502,7 @@ function update(dt){
   if(season==='spring'&&S.kamiT<0&&S.dist>=kamiD){ S.kamiT=S.t; } // somebody's balloon, loose in the evening
   if(S.trainT<0&&S.dist>=trainD){ S.trainT=S.t; } // the last train home
   if(barkOn&&S.barkT<0&&S.dist>=barkX){ S.barkT=S.t; tone(240,190,.09,'triangle',.026,.01); tone(200,160,.08,'triangle',.02,.16); } // a dog barks off in the alleys - her ear flicks toward it
-  if(bellOn&&S.bellT<0&&S.t>=S.bellAt){ S.bellT=S.t; tone(98,92,5,'sine',.026); tone(294,280,2.6,'sine',.007,.03); tone(492,470,1.3,'sine',.004,.07); } // the far temple bell on the hour, very soft
+  if(bellOn&&S.bellT<0&&S.t>=S.bellAt){ S.bellT=S.t; tone(98,92,5,'sine',.026,1.2); tone(294,280,2.6,'sine',.007,1.23); tone(492,470,1.3,'sine',.004,1.27); } // the far temple bell on the hour - its strike arriving a breath late, the way distance carries sound
   if(glfOn&&S.glfT<0&&glfX-S.camX<W*1.5){ S.glfT=S.t; } // the lone leaf lets go just before its place enters view
   if(wedOn&&S.wedT<0&&S.dist>=wedD){ S.wedT=S.t; } // the fox wedding sets out
   if(kaneOn&&S.kaneN<108&&S.t-S.kaneT>=9){ S.kaneN++; S.kaneT=S.t; tone(96,84,3.2,'sine',.045); tone(288,270,1.8,'sine',.014,.02); tone(578,560,.9,'sine',.007,.04); } // one strike of the hundred and eight
