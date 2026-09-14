@@ -1848,9 +1848,10 @@ function draw(){
     ctx.strokeStyle=_CSS(_MIX([12,10,7],[22,17,11],dk)); ctx.lineWidth=1.2; // the vent slats
     for(let sl=0;sl<3;sl++){ ctx.beginPath(); ctx.moveTo(wx-6,gy-11+sl*3); ctx.lineTo(wx+8,gy-11+sl*3); ctx.stroke(); }
     const calm=(wx<420&&wx>160)?Math.sin((420-wx)/260*Math.PI):0; // the air goes still between gusts as she comes alongside - one calm second before her slipstream reaches it
+    const lean=S.gust||0, leanK=lean*lean; // the wind's hand - on a windy beat it blows the curl out and bends the whole wisp downwind
     for(let wi=0;wi<7;wi++){ const wy=gy-18-wi*5.5, ww=1.1+wi*.45; // the wisp, rising and thinning
-      const drift=(Math.sin(S.t*.9+wi*.8)*(1.5+wi*1.2)+(S.gust||0)*(1+wi*1.8))*(1-calm)+cu*(wi*3.2); // it stands straight in the calm, and still curls away downstream of her
-      ctx.fillStyle='rgba(216,220,226,'+((.27-wi*.022)*(1-cu*.55)).toFixed(3)+')';
+      const drift=(Math.sin(S.t*.9+wi*.8)*(1.5+wi*1.2)*(1-lean*.55)+leanK*(wi*wi*.35+wi*1.5))*(1-calm)+cu*(wi*3.2); // straight in the calm, leaning with the gusts, and still curling away downstream of her
+      ctx.fillStyle='rgba(216,220,226,'+((.27-wi*.022)*(1-cu*.55)*(1-lean*.22)).toFixed(3)+')'; // blown a little thinner on the windy beats
       ctx.beginPath(); ctx.ellipse(wx+1+drift,wy,ww*1.2,ww,0,0,7); ctx.fill(); }
   } }
   // sparrow bath - a puddle left by the evening rain, the sky caught in it, sparrows mid-bath
