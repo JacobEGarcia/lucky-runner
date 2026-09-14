@@ -1356,6 +1356,22 @@ function draw(){
     for(let wi=0;wi<5;wi++){ const wu=(S.t*.22+wi/5)%1, wxp=wx+14+Math.sin(S.t*.8+wi*2)*1.4*wu+pw*wu*wu, wyp=gy-27-wu*13;
       ctx.fillStyle='rgba(214,212,200,'+((1-wu)*.14*(1-dk*.4)).toFixed(3)+')';
       ctx.beginPath(); ctx.arc(wxp,wyp,1+wu*2.4,0,7); ctx.fill(); }
+    // furin - a wind chime under the far eave, its paper strip lifting when the gusts rise
+    const fx3=wx+42, fy3=gy-46; // hung from the roof's far corner
+    const fth=((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))+.1*Math.sin(S.t*2.2); // it swings with the gusts
+    ctx.save(); ctx.translate(fx3,fy3); ctx.rotate(fth*.5);
+    ctx.strokeStyle=_CSS(_MIX([90,70,50],[120,95,68],dk)); ctx.lineWidth=.7; // its cord
+    ctx.beginPath(); ctx.moveTo(0,-.5); ctx.lineTo(0,.6); ctx.stroke();
+    ctx.strokeStyle='rgba(214,222,226,'+(.55*(1-dk*.3)).toFixed(3)+')'; ctx.lineWidth=.9; // the little glass bell, mouth down
+    ctx.beginPath(); ctx.arc(0,2.4,2.4,3.44,2.84); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-2.3,3.1); ctx.lineTo(2.3,3.1); ctx.stroke();
+    ctx.fillStyle=_CSS(_MIX([150,96,80],[196,130,108],dk)); ctx.beginPath(); ctx.arc(0,4.2,.7,0,7); ctx.fill(); // the clapper
+    ctx.restore();
+    ctx.save(); ctx.translate(fx3,fy3+4.6); ctx.rotate(fth); // the tanzaku strip below, swinging wider
+    ctx.fillStyle=_CSS(_MIX([168,50,44],[214,74,62],dk)); // vermilion paper
+    ctx.fillRect(-1.1,0,2.2,8);
+    ctx.fillStyle='rgba(240,230,210,.35)'; ctx.fillRect(-1.1,0,2.2,1.6); // its pale top edge
+    ctx.restore();
   } }
   // kakashi - a scarecrow in the harvested field, its sleeves lifting with the gusts
   if(kasOn){ const wx=kasX-S.camX; if(wx>-90&&wx<W+90){ const gy=groundY();
