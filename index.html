@@ -1508,7 +1508,7 @@ function draw(){
     // furin - a wind chime under the far eave, its paper strip lifting when the gusts rise
     const fx3=wx+42, fy3=gy-46; // hung from the roof's far corner
     const calm3=(fx3<420&&fx3>160)?Math.sin((420-fx3)/260*Math.PI):0; // the same calm that stills the kettle - the chime's small voice pausing as she passes
-    const fth=((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))*(1-calm3)+.1*Math.sin(S.t*2.2)*(1-calm3); // it swings with the gusts, and goes still in the calm
+    const ln3=(S.gust||0)*(S.gust||0), fth=(((S.gust||0)*.75)*(1+.4*Math.sin(S.t*5.3))+ln3*.4*(1+.3*Math.sin(S.t*1.9)))*(1-calm3)+.1*Math.sin(S.t*2.2)*(1-calm3); // it swings with the gusts - wide and held off-center on the windy beats - and goes still in the calm
     ctx.save(); ctx.translate(fx3,fy3); ctx.rotate(fth*.5);
     ctx.strokeStyle=_CSS(_MIX([90,70,50],[120,95,68],dk)); ctx.lineWidth=.7; // its cord
     ctx.beginPath(); ctx.moveTo(0,-.5); ctx.lineTo(0,.6); ctx.stroke();
@@ -1605,8 +1605,8 @@ function draw(){
       ctx.beginPath(); ctx.ellipse(fx,gy-3,1.1,.9,0,0,7); ctx.fill(); // its heart
       for(let wi=0;wi<4;wi++){ const wu=((S.t*.16+wi/4+fi*.13)%1); // the column rises and leans away with the wind
         const calm2=(fx<560&&fx>300)?Math.sin((560-fx)/260*Math.PI):0; // the same calm that stills the kettle - one air over the field, settling fire by fire ahead of her
-        const wy2=gy-4-wu*26, wx2=fx+(g2*wu*20+Math.sin(S.t*.7+wi+fi)*wu)*(1-calm2);
-        ctx.fillStyle='rgba(196,192,184,'+((1-wu)*.2*(1-dk*.35)).toFixed(3)+')';
+        const wy2=gy-4-wu*26, ln2=g2*g2, wx2=fx+(g2*wu*20*(1+wu*ln2*2.2)+Math.sin(S.t*.7+wi+fi)*wu*(1-g2*.5))*(1-calm2); // the column bends downwind on the windy beats, its wobble blown out
+        ctx.fillStyle='rgba(196,192,184,'+((1-wu)*.2*(1-dk*.35)*(1-ln2*.18)).toFixed(3)+')'; // blown a little thinner
         ctx.beginPath(); ctx.ellipse(wx2,wy2,1+wu*2.6,1.6+wu*3.4,0,0,7); ctx.fill(); } } }
   // the river gap - a moon-viewing boat far off on the water, one lantern aboard, drifting with the current
   if(rivOn){ const wx=rivX-S.camX; if(wx>-200&&wx<W+200){ const gy=groundY();
@@ -1638,11 +1638,12 @@ function draw(){
     ctx.fillStyle=_CSS(_MIX([24,20,15],[36,30,22],dk)); // the low cabin roof
     ctx.beginPath(); ctx.ellipse(bxp+1,byp-2.4,4.6,2.4,0,Math.PI,0); ctx.fill();
     const lx=bxp-6.4, calm4=(lx<420&&lx>160)?Math.sin((420-lx)/260*Math.PI):0; // the same calm that stills the kettle - the one light on the water going steady as she passes the mooring
-    const lg=(.75+.25*Math.sin(S.t*4.2)*(1-calm4))*(1-.45*dip); // one lantern at the bow - hushed in the calm, and dipping once as the wake arrives
+    const ln4=(S.gust||0)*(S.gust||0), gut=Math.max(0,Math.sin(S.t*9.3)*Math.sin(S.t*4.7))*(1-calm4); // on the windy beats the flame gutters - quick irregular catches of shadow
+    const lg=(.75+.25*Math.sin(S.t*4.2)*(1-calm4))*(1-.45*dip)*(1-ln4*.38*gut); // one lantern at the bow - hushed in the calm, guttering in the wind, and dipping once as the wake arrives
     ctx.fillStyle='rgba(255,190,110,'+(.14*lg*(1-dk*.2)).toFixed(3)+')';
-    ctx.beginPath(); ctx.arc(bxp-6.4,byp-3.4,4,0,7); ctx.fill();
+    ctx.beginPath(); ctx.arc(bxp-6.4+ln4*1.3*(1-calm4),byp-3.4,4,0,7); ctx.fill(); // the glow leans with the flame
     ctx.fillStyle=_CSS(_MIX([196,120,58],[238,170,100],dk));
-    ctx.beginPath(); ctx.ellipse(bxp-6.4,byp-3.4,1.6,2,0,0,7); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(bxp-6.4+ln4*1.3*(1-calm4),byp-3.4,1.6,2,0,0,7); ctx.fill(); // the flame itself leans
     const calmK=Math.max(0,Math.min(1,1-(S.gust||0)*3)); // the surface going still
     ctx.strokeStyle='rgba(238,180,100,'+(.22*lg*(1-dk*.3)*(1-calmK*.85)).toFixed(3)+')'; ctx.lineWidth=.8; // its trembling reflection, settling as the water calms
     ctx.beginPath(); ctx.moveTo(lx+Math.sin(S.t*2.6)*.6*(1-calm4),byp+1); ctx.lineTo(lx+Math.sin(S.t*2.6+1)*.8*(1-calm4),byp+4.6); ctx.stroke(); // the trembling reflection stills with the flame
