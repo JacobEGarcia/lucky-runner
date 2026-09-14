@@ -944,6 +944,18 @@ function draw(){
         if(ra>.01){ ctx.strokeStyle='rgba(214,164,64,'+ra.toFixed(3)+')'; ctx.lineWidth=1.4;
           ctx.beginPath(); ctx.arc(tx,gy-th+4,5+kk*54,0,7); ctx.stroke(); } } } }
 
+  // the far temple on bell nights - you see the strike a breath before the ring arrives over the roofs
+  if(bellOn&&!kaneOn){ const tx2=((3900-S.camX*.35)%(W+500)+(W+250))%(W+500)-250, gy=groundY();
+    if(tx2>-60&&tx2<W+60){ ctx.fillStyle=_CSS(_MIX([24,19,13],[48,34,24],dk));
+      ctx.fillRect(tx2-8,gy-46,3.4,46); ctx.fillRect(tx2+5,gy-46,3.4,46); // the bell tower's posts
+      ctx.beginPath(); ctx.moveTo(tx2-13,gy-48); ctx.lineTo(tx2,gy-60); ctx.lineTo(tx2+13,gy-48); ctx.closePath(); ctx.fill(); // its roof
+      ctx.fillStyle=_CSS(_MIX([60,48,30],[90,64,36],dk)); ctx.beginPath(); ctx.arc(tx2,gy-42,2.6,0,7); ctx.fill(); // the bell
+      const bAge=S.bellT<0?-1:S.t-S.bellT;
+      if(bAge>=0&&bAge<2.6){ const bk=bAge/2.6, ra=(1-bk)*.26*(1-dk*.4);
+        if(ra>.01){ ctx.strokeStyle='rgba(214,164,64,'+ra.toFixed(3)+')'; ctx.lineWidth=1.2;
+          ctx.beginPath(); ctx.arc(tx2,gy-42,4+bk*40,0,7); ctx.stroke(); } // the ring you see
+        if(bAge<.5){ ctx.fillStyle='rgba(240,200,120,'+((.5-bAge)*.5*(1-dk*.4)).toFixed(3)+')'; ctx.beginPath(); ctx.arc(tx2,gy-42,3.4,0,7); ctx.fill(); } } } } // the struck bell catching light
+
   // the distant temple stair - winter full-moon nights; lanterns mark the climb to a small hall on the hill
   if(stairOn){ const sx0=((stairX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250, gy=groundY();
     if(sx0>-100&&sx0<W+100){ const na=(1-dk*.92)*Math.max(.35,fullK);
