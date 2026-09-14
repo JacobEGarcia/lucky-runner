@@ -472,7 +472,7 @@ function genAhead(){
 }
 function reset(){
   rng=mulberry32(seedNum);
-  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; S.emaB=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
+  obstacles=[]; coinList=[]; parts=[]; fireflies=[]; jizoList=jizoX.map(x=>({x})); owlList=owlX.map(x=>({x,fly:-1})); S.dist=0; S.coins=0; S.bonus=0; S.bestFlag=+(localStorage.getItem('lr_bestd_'+seedStr)||0)*20; S.flagPassed=false; S.speed=290; S.t=0; S.camX=0; S.charm=false; S.charmGot=false; S.charmUsed=0; S.invuln=0; S.starT=-1; S.birdT=-1; S.geeseT=-1; S.kamiT=-1; S.wedT=-1; S.kaneT=-9; S.kaneN=0; S.spT=-1; S.kazaA=0; S.bathT=-1; S.gazeDone=false; S.gazeT=undefined; S.gazeK=0; S.runPh=0; S.effSpeed=290; S.cicadaT=2.5; S.cicadaN=0; S.cricketT=6; S.cricketN=0; S.akaT=-1; S.padT=-1; S.ketT=-1; S.amaT=-1; S.barkT=-1; S.bellT=-1; S.glfT=-1; S.lflyT=-1; S.lastT=-1; S.lastN=0; S.shopT=-1; S.kakT=-1; S.birdAns=0; S.ichoT=-1; S.spHad=false; S.spRetT=-1; S.lastFlyT=-1; S.lastFlyX=0; S.trainT=-1; S.ripT=-1; S.kazaW=0; S.frontT=-1; S.frontG=0; S.lullK=0; S.ansT=-1; S.kakG=-1; S.emaT=-1; S.gstT=-1; S.gPv=0; S.emaN=0; S.emaB=0; S.pipT=-1; S.pipN=0; { const nw2=new Date(); S.bellAt=bellinPin>=0?bellinPin:(3600-(nw2.getMinutes()*60+nw2.getSeconds())); }
   nextObX=W*.8+200;
   cat.y=groundY(); cat.vy=0; cat.onGround=true; cat.jumps=0; cat.dead=0; cat.squash=0; S.complete=false; S.ceremT=0; S.hanabi=[];
   clouds=[]; for(let i=0;i<6;i++) clouds.push({x:Math.random()*W,y:20+Math.random()*H*.3,s:.6+Math.random()});
@@ -503,7 +503,7 @@ function update(dt){
     S.gPv=nwG; } // two gusts arriving close together - the ema knock once, wood on wood, only when the air hurries
   { const eAgU=ematPin>=0?ematPin:(S.emaT<0?-1:S.t-S.emaT); // the row still trembling
     if(emaOn&&!S.emaB&&eAgU>=0&&eAgU<1.6&&emaX-S.camX<cat.x){ S.emaB=1; tone(300,240,.04,'triangle',.018,.02); } } // and if she passes mid-shiver, one extra soft tick - the row acknowledging her
-  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' emaB'+(S.emaB||0)+' ex'+Math.round(emaX-S.camX)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
+  if(qs.get('edbg')) document.title=('|ED edgeN'+(S.edgeN||0)+' minGap'+(S.minGap||-1)+' emaN'+(S.emaN||0)+' emaB'+(S.emaB||0)+' pipN'+(S.pipN||0)+' ex'+Math.round(emaX-S.camX)+' gust'+(S.gust||0).toFixed(2)); // DEBUG
   if(S.invuln>0) S.invuln-=dt;
   if(!S.charmGot && S.dist>=2000){ S.charmGot=true; S.charm=true; spawnDust(cat.x,cat.y-60,30,GOLDL);
     floaters.push({x:cat.x+10,y:cat.y-96,txt:'SECOND WIND - a lucky charm',ttl:1.6,col:GOLDL}); sfxMile(); tone(1568,1568,.3,'sine',.06,.12); }
@@ -513,6 +513,8 @@ function update(dt){
   if(shopOn&&S.shopT<0&&shopX-S.camX<W*.85){ S.shopT=S.t; } // the shopkeeper starts the first panel as she comes
   if(lflyOn&&S.lflyT<0&&lflyX-S.camX<W*1.5){ S.lflyT=S.t; } // the late firefly sets off before it enters view
   if(S.birdT<0&&S.dist>=birdD){ S.birdT=S.t; } // first light brings the birds
+  if(kakaOn&&S.pipT<0&&S.pipN===0&&S.birdT>=0){ S.pipT=S.t+1.1; } // the latecomer leaves the post a breath after the pair lifts
+  if(S.pipT>0&&S.t>=S.pipT){ S.pipT=-1; S.pipN++; tone(4200,3600,.03,'triangle',.004); } // its one dry pip as it enters the sky - not the pair's song, a sparrow's chip
   { const spOn=spPin!==null?spPin:(kakaOn&&dawnK()>.75);
     const skx=((kakaX-S.camX*.35)%(W+500)+(W+250))%(W+500)-250;
     if(spOn&&S.spT<0&&skx>-30&&skx<W+30&&Math.abs(skx-cat.x)<70){ S.spT=S.t; S.spHad=true; tone(1900,2400,.1,'sine',.018,.01); tone(2300,2800,.08,'sine',.014,.02); } // wings off the arms
