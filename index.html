@@ -648,6 +648,9 @@ function update(dt){
     for(let i=scatter.length-1;i>=0;i--) if(scatter[i].x<S.camX-60) scatter.splice(i,1); }
   if(season!=='summer' && (S.gust||0)>.45 && leaves.length<44 && Math.random()<dt*S.gust*7)
     leaves.push({x:S.camX+Math.random()*W,y:groundY()-2,vy:-(22+Math.random()*30),ph:Math.random()*7,ttl:2.5+Math.random()*1.5});
+  if(season==='autumn'){ const fage=S.t-(S.frontT<0?-99:S.frontT); // the front carries visible cargo - leaves lofted at its leading edge, riding with it
+    if(fage>=0&&fage<4.2&&leaves.length<52&&Math.random()<dt*7*S.frontG)
+      leaves.push({x:S.camX+(-160+fage*340)+Math.random()*36-18,y:groundY()-4-Math.random()*46,vy:-(6+Math.random()*16),ph:Math.random()*7,ttl:1.7+Math.random()*.9,ride:1,dv:Math.random()*80-40}); }
   const pRate=season==='winter'?1.2:season==='spring'?.7:season==='summer'?.35:.5;
   if(Math.random()<dt*pRate){
     if(season==='summer') leaves.push({x:S.camX+W+20,y:groundY()-20-Math.random()*120,vy:-(4+Math.random()*8),ph:Math.random()*7,ttl:16});
@@ -656,7 +659,7 @@ function update(dt){
   if(fireOn&&S.mode==='run'&&Math.random()<dt*.2){ for(let i=0;i<3;i++) fireflies.push({x:S.camX+60+Math.random()*(W-120),y:groundY()-2,t0:S.t+i*.55,ph:Math.random()*7}); if(fireflies.length>21) fireflies.splice(0,fireflies.length-21); }
   fireflies=fireflies.filter(f=>S.t-f.t0<7);
   const gk=1+(S.gust||0)*1.7, gl=(S.gust||0)*95, lift=(S.gust||0)*10;
-  for(let i=leaves.length-1;i>=0;i--){ const l=leaves[i]; l.ttl-=dt; l.y+=(l.vy-lift)*dt; l.x-=(S.speed*.9+gl)*dt; if(l.ttl<=0||l.x<S.camX-40) leaves.splice(i,1); }
+  for(let i=leaves.length-1;i>=0;i--){ const l=leaves[i]; l.ttl-=dt; l.y+=(l.vy-lift)*dt; if(l.ride){ l.x+=(S.speed+300+(l.dv||0))*dt; } else l.x-=(S.speed*.9+gl)*dt; if(l.ttl<=0||l.x<S.camX-40) leaves.splice(i,1); }
 }
 function gameOver(){
   if(S.mode!=='run') return;
